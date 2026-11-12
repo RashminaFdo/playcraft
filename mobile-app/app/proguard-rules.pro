@@ -1,0 +1,4 @@
+-keep class dev.rashmina.playcraft.controller.** { *; }
+-keep class com.google.zxing.** { *; }
+-dontwarn java.awt.**
+-dontwarn javax.imageio.**

@@ -1,0 +1,13 @@
+[versions]
+androidGradlePlugin = "9.0.1"
+androidxCore = "1.16.0"
+zxingCore = "3.5.3"
+junit = "4.13.2"
+
+[libraries]
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxingCore" }
+junit = { module = "junit:junit", version.ref = "junit" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

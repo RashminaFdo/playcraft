@@ -1,0 +1,54 @@
+[package]
+name = "playcraft"
+version = "1.0.0"
+description = "PlayCraft by Rashmina Fernando (www.rashmina.dev) — Next-Gen PS5-Styled Native Windows Game Launcher"
+authors = ["Rashmina Fernando <contact@rashmina.dev> (https://www.rashmina.dev)"]
+license = "LicenseRef-RashminaFernando"
+homepage = "https://www.rashmina.dev"
+repository = "https://www.rashmina.dev"
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "playcraft_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.24"
+futures-util = "0.3"
+anyhow = "1"
+thiserror = "1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+walkdir = "2"
+sysinfo = "0.30"
+qrcode = { version = "0.14", default-features = false, features = ["svg"] }
+local-ip-address = "0.6"
+rand = "0.8"
+rfd = "0.14"
+winreg = "0.52"
+vigem-client = { version = "0.1.4", features = ["unstable_xtarget_notification"] }
+windows-sys = { version = "0.59", features = [
+  "Win32_Foundation",
+  "Win32_Graphics_Gdi",
+  "Win32_Devices_Bluetooth",
+  "Win32_Networking_WinSock",
+  "Win32_System_Com",
+  "Win32_UI_Input_KeyboardAndMouse",
+  "Win32_UI_Input_XboxController",
+  "Win32_System_ProcessStatus",
+  "Win32_System_Threading",
+  "Win32_UI_WindowsAndMessaging"
+] }
+
+[package.metadata.playcraft]
+author = "Rashmina Fernando"
+website = "https://www.rashmina.dev"
+copyright = "Copyright (c) 2026 Rashmina Fernando (www.rashmina.dev). All Rights Reserved."

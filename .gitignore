@@ -1,0 +1,25 @@
+# Rust / Cargo Build Artifacts
+/target/
+/src-tauri/target/
+**/*.rs.bk
+Cargo.lock
+
+# Packaged Zip Bundles (keep source & installer scripts)
+/dist-bundle/
+
+# Local User Runtime State
+playcraft_library.json
+playcraft_settings.json
+playcraft_sessions.json
+playcraft_crash.log
+playcraft_backups/
+src-tauri/playcraft_library.json
+src-tauri/playcraft_settings.json
+src-tauri/playcraft_sessions.json
+
+# OS & Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

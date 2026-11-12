@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayCraft by Rashmina Fernando (www.rashmina.dev)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Urbanist:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ========================================================================
+       STARTUP BOOT SEQUENCE (boot_intro.mp4)
+       ======================================================================== -->
+  <div id="bootIntroOverlay" class="boot-intro-overlay" role="dialog" aria-label="PlayCraft Console Boot Sequence">
+    <video id="bootIntroVideo" class="boot-video" src="assets/boot_intro.mp4" autoplay playsinline></video>
+    <div class="boot-hud">
+      <div class="boot-brand-pill">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft Logo" class="boot-logo-img" />
+        <div class="boot-brand-text">
+          <span class="boot-title">PLAYCRAFT</span>
+          <span class="boot-sub">Engineered by Rashmina Fernando (www.rashmina.dev)</span>
+        </div>
+      </div>
+      <button id="skipBootBtn" class="boot-skip-btn" type="button">
+        Skip Intro <kbd>ESC</kbd>
+      </button>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       AMBIENT WALLPAPER & HERO ARTWORK STAGE (Zero Purple/Indigo AI Gradients)
+       ======================================================================== -->
+  <div class="ambient-stage" aria-hidden="true">
+    <div id="heroBgA" class="hero-bg active"></div>
+    <div id="heroBgB" class="hero-bg"></div>
+    <div class="hero-vignette"></div>
+  </div>
+
+  <!-- ========================================================================
+       MAIN LAUNCHER SHELL
+       ======================================================================== -->
+  <div class="ps5-shell">
+    <!-- TOP BAR -->
+    <header class="ps5-topbar">
+      <div class="topbar-left">
+        <div class="brand-emblem" id="logoAboutTrigger" title="PlayCraft by Rashmina Fernando (www.rashmina.dev)">
+          <img src="assets/playcraft-logo.png" alt="PlayCraft" class="cyan-logo" />
+        </div>
+        <nav class="ps5-tabs" role="tablist" aria-label="Main Categories">
+          <button class="ps5-tab active" data-tab="games" role="tab" aria-selected="true" type="button">Games</button>
+          <button class="ps5-tab" data-tab="media" role="tab" aria-selected="false" type="button">Media &amp;
+            Medal</button>
+          <button class="ps5-tab" id="openAnalyticsTabBtn" role="tab" aria-selected="false"
+            type="button">Analytics</button>
+        </nav>
+      </div>
+
+      <div class="topbar-right">
+        <!-- Update Notification Pill (Shown silently when daily check finds a new GitHub Release) -->
+        <button class="update-topbar-pill hidden" id="updateAvailablePill" type="button"
+          title="New PlayCraft Update Available on GitHub">
+          Update Ready
+        </button>
+
+        <!-- Live Hardware Telemetry Readout (Monospace, No Pulsing Dots) -->
+        <div class="telemetry-pill" id="liveTelemetryPill" title="Real-Time System Memory Telemetry">
+          <span id="ramTelemetryText">RAM -- / -- GB</span>
+        </div>
+
+        <div class="fps-pill" id="fpsCounter">60 FPS</div>
+
+        <!-- Quick Search Toggle -->
+        <button class="icon-btn" id="searchToggleBtn" title="Search Library" type="button" aria-label="Search Library">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+        </button>
+
+        <!-- 1-Click Open Medal.tv Button -->
+        <button class="action-top-btn" id="openMedalTopBtn" title="Open Medal.tv Desktop Recorder" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="23 7 16 12 23 17 23 7" />
+            <rect width="15" height="14" x="1" y="5" rx="2" ry="2" />
+          </svg>
+          <span>Open Medal</span>
+        </button>
+
+        <!-- Add / Scan Games -->
+        <button class="action-top-btn" id="openScannerBtn" title="Add Game or Sync Steam / Epic / GOG" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
+          <span>Add Game</span>
+        </button>
+
+        <!-- Mobile Controller Pairing -->
+        <button class="icon-btn" id="openMobileBtn" title="Pair Mobile Controller (PS5 / Xbox / Gyro / Trackpad)"
+          type="button" aria-label="Pair Mobile Controller">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6" x2="10" y1="12" y2="12" />
+            <line x1="8" x2="8" y1="10" y2="14" />
+            <line x1="15" x2="15.01" y1="13" y2="13" />
+            <line x1="18" x2="18.01" y1="11" y2="11" />
+            <rect width="20" height="12" x="2" y="6" rx="2" />
+          </svg>
+        </button>
+
+        <!-- Deep Optimizations -->
+        <button class="icon-btn" id="openOptimizerBtn" title="Deep System Optimizations &amp; Standby RAM Purge"
+          type="button" aria-label="Deep Optimizations">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+        </button>
+
+        <!-- Fullscreen Toggle -->
+        <button class="icon-btn" id="fullscreenToggleBtn" title="Toggle Fullscreen (F11)" type="button"
+          aria-label="Toggle Fullscreen">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+            <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+            <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+            <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+          </svg>
+        </button>
+
+        <!-- Settings Icon (No Profile Avatar) -->
+        <button class="icon-btn" id="openSettingsBtn"
+          title="Launcher Settings, Wallpapers &amp; Hardware Specifications" type="button"
+          aria-label="Launcher Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path
+              d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
+
+        <!-- Dedicated Close / Exit Application Button -->
+        <button class="icon-btn exit-top-btn" id="exitLauncherTopBtn" title="Close PlayCraft Application (Exit)"
+          type="button" aria-label="Close Application">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+
+        <time id="clockDisplay" class="ps5-clock">12:00 PM</time>
+      </div>
+    </header>
+
+    <!-- INLINE SEARCH, STORE FILTER & SORT BAR -->
+    <div id="searchBarWrap" class="search-bar-wrap hidden">
+      <input id="searchInput" type="search" placeholder="Search library by title, genre, or path (Ctrl+K)..."
+        autocomplete="off" />
+      <div class="filter-pills-group" role="group" aria-label="Filter by Store">
+        <button type="button" class="filter-chip active" data-store-filter="ALL">All</button>
+        <button type="button" class="filter-chip" data-store-filter="FAV">★ Favorites</button>
+        <button type="button" class="filter-chip" data-store-filter="STEAM">Steam</button>
+        <button type="button" class="filter-chip" data-store-filter="EPIC GAMES">Epic</button>
+        <button type="button" class="filter-chip" data-store-filter="LOCAL">Local</button>
+      </div>
+      <select id="librarySortSelect" class="clean-select compact-select" aria-label="Sort Library">
+        <option value="recent">Sort: Default Order</option>
+        <option value="playtime">Sort: Most Played</option>
+        <option value="title">Sort: A – Z</option>
+        <option value="size">Sort: Disk Size</option>
+      </select>
+      <button id="toggleGridDrawerBtn" class="small-cyan-btn" type="button" title="Open Full Library Grid View (G)">All
+        Games Grid</button>
+      <button id="clearSearchBtn" type="button">Reset</button>
+    </div>
+
+    <!-- HORIZONTAL GAME TILE STRIP -->
+    <section class="tile-strip-section" aria-label="Installed Game Library">
+      <div class="tile-strip-header">
+        <div id="gameTileStrip" class="ps5-tile-strip" tabindex="0"></div>
+      </div>
+    </section>
+
+    <!-- FOCUSED GAME DETAILS & ACTIONS -->
+    <main class="hero-spotlight">
+      <div class="hero-info-column">
+        <div class="hero-meta-line">
+          <span id="heroSourceBadge" class="source-badge">READY</span>
+          <span id="heroGenreBadge" class="genre-badge">PC GAME</span>
+          <span id="heroSubtitle" class="hero-subtitle">PlayCraft by Rashmina Fernando</span>
+        </div>
+
+        <div class="hero-title-row">
+          <h1 id="heroTitle" class="hero-title">Add Your First Game</h1>
+          <button id="favoriteGameBtn" class="icon-btn fav-star-btn hidden" type="button"
+            title="Pin / Favorite Game (F)" aria-label="Favorite Game">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polygon
+                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+          </button>
+        </div>
+        <p id="heroDescription" class="hero-description">
+          Click "Add Game" to select any local executable (.exe, .bat, .lnk) or auto-sync your Steam, Epic Games, GOG
+          Galaxy, and Ubisoft libraries.
+        </p>
+
+        <div class="hero-actions-row">
+          <button id="playGameBtn" class="ps5-play-btn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <polygon points="6 4 20 12 6 20 6 4" />
+            </svg>
+            <span id="playBtnLabel">Play Game</span>
+          </button>
+
+          <button id="openGameWorkspaceBtn" class="ps5-secondary-btn" type="button"
+            title="Save-Game Backup Vault, Refresh Rate (Hz) Switcher, Notes &amp; Mods">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            <span>Saves, Hz &amp; Notes</span>
+          </button>
+
+          <button id="drmConfigBtn" class="ps5-secondary-btn" type="button" title="Per-Game DRM &amp; Launch Flags">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+            <span>Launch Flags</span>
+          </button>
+
+          <button id="openInstallFolderBtn" class="ps5-secondary-btn" type="button"
+            title="Open Game Installation Directory in Windows Explorer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+            </svg>
+            <span>Folder</span>
+          </button>
+
+          <button id="removeGameBtn" class="ps5-secondary-btn danger-btn hidden" type="button"
+            title="Remove Game from PlayCraft Library">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18" />
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+            </svg>
+            <span>Remove</span>
+          </button>
+        </div>
+
+        <!-- Separate Dedicated Hero Stats Row Below the Buttons so they NEVER Collide -->
+        <div class="hero-stats-row">
+          <div class="stat-pill">
+            <span class="stat-label">PLAYTIME</span>
+            <span id="statPlaytime" class="stat-value">0.0 hrs</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label">STATUS</span>
+            <span id="statLastPlayed" class="stat-value">Never</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-label">ROOT DISK SIZE</span>
+            <span id="statSize" class="stat-value">0.0 GB</span>
+          </div>
+        </div>
+      </div>
+  </div>
+  </main>
+
+  <!-- BOTTOM ACTIVITY / MEDIA CARDS ROW -->
+  <section class="activities-section" aria-label="Game Activities and Media">
+    <div id="activityCardsRow" class="activity-cards-row"></div>
+  </section>
+
+  <!-- PERMANENT AUTHORSHIP FOOTER -->
+  <footer class="ps5-footer">
+    <div class="footer-left">
+      <span class="controller-hint"><kbd>←</kbd><kbd>→</kbd> Navigate</span>
+      <span class="controller-hint"><kbd>Enter</kbd> Play Prompt</span>
+      <span class="controller-hint"><kbd>Esc</kbd> Back / Exit</span>
+      <span class="controller-hint"><kbd>Alt+F4</kbd> Exit Confirm</span>
+      <span class="controller-hint"><kbd>M</kbd> Mobile App</span>
+      <span class="controller-hint"><kbd>S</kbd> Settings</span>
+      <span class="controller-hint"><kbd>Ctrl+K</kbd> Filter</span>
+      <span class="controller-hint"><kbd>G</kbd> Grid</span>
+      <span class="controller-hint"><kbd>F11</kbd> Fullscreen</span>
+      <span class="controller-hint"><kbd>Ctrl+Shift+O</kbd> Overlay</span>
+    </div>
+    <div class="footer-right">
+      <span>PlayCraft Native Windows Launcher • Engineered by </span>
+      <a href="https://www.rashmina.dev" target="_blank" rel="noopener">Rashmina Fernando (www.rashmina.dev)</a>
+    </div>
+  </footer>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 1: LAUNCHER SETTINGS, WALLPAPERS & FULL PC SPECIFICATIONS
+       ======================================================================== -->
+  <dialog id="settingsDialog" class="ps5-dialog wide-dialog" closedby="any" aria-labelledby="settingsDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="settingsDialogTitle">Launcher Settings &amp; System Specifications</h2>
+          <p class="dialog-sub">Wallpapers, Window Behavior, Audio &amp; Real Hardware Telemetry</p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="settingsDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="settings-layout">
+      <aside class="settings-sidebar">
+        <button type="button" class="settings-nav-btn active" data-settings-tab="tab-wallpapers">Wallpapers &amp;
+          Theme</button>
+        <button type="button" class="settings-nav-btn" data-settings-tab="tab-general">Window &amp; System Tray</button>
+        <button type="button" class="settings-nav-btn" data-settings-tab="tab-audio">Audio &amp; Boot Intro</button>
+        <button type="button" class="settings-nav-btn" data-settings-tab="tab-specs">My PC Specifications</button>
+        <button type="button" class="settings-nav-btn" data-settings-tab="tab-about">About &amp; Authorship</button>
+      </aside>
+
+      <div class="settings-content-area">
+        <!-- TAB 1: WALLPAPERS -->
+        <div id="tab-wallpapers" class="settings-pane active">
+          <h3>Select Launcher Wallpaper</h3>
+          <p class="muted-text">
+            Choose from the 5 built-in 4K wallpapers in <code>ui/assets/wallpapers/</code>.
+          </p>
+          <div id="wallpaperGalleryGrid" class="wallpaper-gallery-grid"></div>
+
+          <div class="settings-group-box">
+            <label class="checkbox-row">
+              <input id="settingLockWallpaper" type="checkbox" />
+              <span><strong>Always Use Selected Wallpaper</strong> (Keep your chosen wallpaper visible instead of
+                switching to game cover banners)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- TAB 2: WINDOW & SYSTEM TRAY -->
+        <div id="tab-general" class="settings-pane hidden">
+          <h3>Window, Background &amp; System Tray Behavior</h3>
+          <p class="muted-text">Control what happens when games launch, when close (X) is pressed, and Windows startup
+            behavior.</p>
+          <div class="settings-group-box">
+            <div class="form-field" style="margin-bottom: 14px;">
+              <label class="field-label" for="settingOnGameLaunch"><strong>When a Game is Launched:</strong></label>
+              <select id="settingOnGameLaunch" class="clean-select full-width" style="margin-top: 5px;">
+                <option value="keep_open" selected>Always Keep PlayCraft Running Open (Required for Mobile Controller)
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field" style="margin-bottom: 14px;">
+              <label class="field-label" for="settingCloseButtonAction"><strong>When Close (X) Button is
+                  Clicked:</strong></label>
+              <select id="settingCloseButtonAction" class="clean-select full-width" style="margin-top: 5px;">
+                <option value="exit_app" selected>Close &amp; Exit PlayCraft Application Immediately (Default)</option>
+                <option value="minimize_to_tray">Minimize to Windows System Tray (Keeps Mobile Controller Active)
+                </option>
+              </select>
+            </div>
+
+            <div class="form-field" style="margin-bottom: 14px;">
+              <label class="field-label" for="settingWindowMode"><strong>Window Display Mode:</strong></label>
+              <select id="settingWindowMode" class="clean-select full-width" style="margin-top: 5px;">
+                <option value="fullscreen" selected>Fullscreen (Default)</option>
+                <option value="borderless">Windowed Fullscreen (Borderless)</option>
+                <option value="windowed">Normal Window (Resizable + Title Bar)</option>
+              </select>
+            </div>
+
+            <div class="form-field" style="margin-bottom: 14px;">
+              <label class="field-label" for="settingTargetMonitor"><strong>Display Monitor (Starts on Primary by
+                  Default):</strong></label>
+              <select id="settingTargetMonitor" class="clean-select full-width" style="margin-top: 5px;">
+                <option value="primary" selected>Primary Monitor (Default)</option>
+              </select>
+            </div>
+
+            <label class="checkbox-row">
+              <input id="settingLaunchOnStartup" type="checkbox" />
+              <span><strong>Launch PlayCraft on Windows Startup</strong> (Automatically start with Windows in
+                background)</span>
+            </label>
+
+            <label class="checkbox-row">
+              <input id="settingShowFps" type="checkbox" checked />
+              <span><strong>Show Real-Time Frame Rate Readout</strong> in top bar</span>
+            </label>
+
+            <div class="opt-btn-row" style="margin-top: 16px;">
+              <button id="toggleFullscreenFromSettingsBtn" class="ps5-secondary-btn" type="button">Cycle Display Mode
+                (F11)</button>
+              <button id="openSoundSettingsFromTabBtn" class="ps5-secondary-btn" type="button">Open Windows Audio
+                Mixer</button>
+              <button id="quitAppCompletelyBtn" class="ps5-secondary-btn danger-btn" type="button">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18.36 6.64a9 9 0 1 1-12.73 0" />
+                  <line x1="12" y1="2" x2="12" y2="12" />
+                </svg>
+                Exit PlayCraft Completely
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: AUDIO & BOOT INTRO -->
+        <div id="tab-audio" class="settings-pane hidden">
+          <h3>Audio &amp; Console Startup Sequence</h3>
+          <p class="muted-text">Control synthesized navigation feedback and the startup video.</p>
+          <div class="settings-group-box">
+            <label class="checkbox-row">
+              <input id="settingUiSounds" type="checkbox" checked />
+              <span><strong>Enable UI Navigation Audio</strong> (Synthesized feedback on tile focus and launch)</span>
+            </label>
+            <label class="checkbox-row">
+              <input id="settingBootVideo" type="checkbox" checked />
+              <span><strong>Play Console Boot Sequence (<code>boot_intro.mp4</code>) on Startup</strong></span>
+            </label>
+            <div class="opt-btn-row" style="margin-top: 16px;">
+              <button id="replayBootBtn" class="ps5-secondary-btn" type="button">Replay Boot Sequence Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: FULL REAL PC SPECIFICATIONS -->
+        <div id="tab-specs" class="settings-pane hidden">
+          <div class="specs-header-row">
+            <div>
+              <h3>Complete PC Hardware &amp; Storage Specifications</h3>
+              <p class="muted-text">100% live hardware telemetry queried from Windows Registry &amp; Kernel.</p>
+            </div>
+            <button id="refreshSpecsBtn" class="small-cyan-btn" type="button">Refresh</button>
+          </div>
+
+          <div id="fullSystemSpecsContainer" class="specs-grid-container">
+            <div class="scan-status-box">Querying real hardware specifications...</div>
+          </div>
+        </div>
+
+        <!-- TAB 5: ABOUT & AUTHORSHIP -->
+        <div id="tab-about" class="settings-pane hidden">
+          <div class="about-body">
+            <img src="assets/playcraft-logo.jpg" alt="PlayCraft Logo" class="about-hero-logo" />
+            <div class="about-info">
+              <h3>PlayCraft by Rashmina Fernando</h3>
+              <p>
+                <strong>Author &amp; Rights Holder:</strong>
+                <a href="https://www.rashmina.dev" target="_blank" rel="noopener">Rashmina Fernando
+                  (www.rashmina.dev)</a>
+              </p>
+              <p><strong>License:</strong> Copyright © 2026 Rashmina Fernando (www.rashmina.dev). All Rights Reserved.
+              </p>
+              <p><strong>Architecture:</strong> Native Rust + Tauri v2 + Windows WebView2</p>
+              <ul class="about-list">
+                <li>Multi-Store Auto-Scanner (Steam, Epic Games, GOG Galaxy, Ubisoft) + Online Metadata Auto-Match</li>
+                <li>Save-Game Snapshot Vault + Per-Game Refresh Rate (Hz) &amp; Resolution Switcher</li>
+                <li>Medal.tv 1-Click Integration + Local Clips &amp; Screenshots Browser</li>
+                <li>Tokio Async HTTP &amp; WebSocket Mobile Controller (PS5, Xbox, Gyro Motion &amp; PC Trackpad)</li>
+                <li>Win32 Standby RAM Working-Set Purge &amp; Process Auto-Restore</li>
+              </ul>
+
+              <div class="about-update-box">
+                <div class="about-update-meta">
+                  <strong>App Updates:</strong>
+                  <span id="aboutInstalledVersion" class="badge-cyan">v1.0.0</span>
+                  <span id="aboutUpdateStatus" class="muted-text" style="margin-bottom:0;">Checks daily in background</span>
+                </div>
+                <div class="opt-btn-row" style="margin-top:10px;">
+                  <button id="checkUpdatesNowBtn" class="ps5-secondary-btn" type="button">Check for Updates</button>
+                  <button id="openGithubReleaseBtn" class="ps5-play-btn small" type="button">Latest GitHub Release</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft by Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="settingsDialog" type="button">Done</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 2: ADD GAME & MULTI-STORE AUTO-SCANNER (STEAM / EPIC / GOG / ONLINE DB)
+       ======================================================================== -->
+  <dialog id="scannerDialog" class="ps5-dialog wide-dialog" closedby="any" aria-labelledby="scannerDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="scannerDialogTitle">Add Game &amp; Multi-Store Auto-Scanner</h2>
+          <p class="dialog-sub">Pick any file for automatic online metadata matching, or sync Steam, Epic Games, GOG
+            &amp; Ubisoft</p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="scannerDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="dialog-grid-two">
+      <!-- Left Column: Step 1 (Pick File) & Step 2 (Online Database Auto-Match) -->
+      <div class="scanner-col">
+        <div class="step-card">
+          <div class="step-badge">STEP 1</div>
+          <h3>Select Game File (.exe, .bat, .lnk)</h3>
+          <p class="muted-text">
+            Pick a game executable — PlayCraft automatically calculates its real disk footprint and queries the online
+            database for official artwork, genre, and description.
+          </p>
+          <button id="browseTargetFileBtn" class="ps5-play-btn full-width browse-file-hero-btn" type="button">
+            Choose Game File (.exe, .bat, .lnk)...
+          </button>
+          <div class="input-row" style="margin-top: 8px; margin-bottom: 0;">
+            <input id="customExePath" type="text" placeholder="Selected file path..." readonly />
+          </div>
+          <div id="inspectedFileMetaRow" class="inspected-meta-row">
+            <span id="inspectedSizeBadge" class="badge-cyan">Disk Size: -- GB</span>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">STEP 2 — AUTOMATIC ONLINE DATABASE LOOKUP</div>
+          <h3>Online Game Metadata Match</h3>
+          <div class="input-row">
+            <input id="onlineDbSearchInput" type="text" placeholder="Search game title (auto-filled from file)..." />
+            <button id="searchOnlineDbBtn" class="small-cyan-btn" type="button">Search DB</button>
+          </div>
+          <div id="dbSearchResults" class="db-results-grid">
+            <div class="db-empty-hint">Select a file above or type any game name to auto-fetch description, genre &amp;
+              cover art.</div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">MULTI-STORE &amp; BULK FOLDER SCANNER</div>
+          <div class="preset-row" style="margin-top: 6px;">
+            <button id="scanSteamBtn" class="small-cyan-btn" type="button">Sync Steam, Epic, GOG &amp; Ubisoft</button>
+            <button id="browseFolderBtn" class="small-cyan-btn" type="button">Pick Folder to Scan...</button>
+          </div>
+          <div class="input-row" style="margin-bottom: 6px;">
+            <input id="scanDirInput" type="text" placeholder="Folder path for bulk scan..." />
+            <button id="runDirScanBtn" class="small-cyan-btn" type="button">Scan</button>
+          </div>
+          <div id="scanStatusMsg" class="scan-status-box">
+            Ready. Use "Sync Steam, Epic, GOG &amp; Ubisoft" to import installed store games automatically.
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Step 3 (Auto-Filled Preview & 1-Click Save) -->
+      <div class="scanner-col">
+        <div class="step-card">
+          <div class="step-badge">STEP 3 — VERIFY &amp; ADD TO LIBRARY</div>
+          <h3>Auto-Populated Game Details</h3>
+          <form id="addCustomGameForm" class="custom-game-form">
+            <div class="preview-card-mini">
+              <div class="preview-cover-col">
+                <img id="previewCoverImg" src="assets/playcraft-logo.jpg" alt="Cover Preview" />
+                <button id="pickCoverFileBtn" class="small-cyan-btn full-width" type="button"
+                  style="margin-top:6px;padding:4px 6px;font-size:0.68rem;">Pick Image...</button>
+              </div>
+              <div class="preview-card-fields">
+                <label>
+                  <span>Game Title</span>
+                  <input id="customTitle" type="text" placeholder="Auto-filled from file / online DB" required />
+                </label>
+                <label style="margin-top: 8px; display: block;">
+                  <span>Genre / Store Tag</span>
+                  <input id="customGenre" type="text" placeholder="Auto-filled (e.g. Action / RPG)" />
+                </label>
+              </div>
+            </div>
+
+            <label>
+              <span>Official Game Description (Auto-Fetched)</span>
+              <textarea id="customDescription" rows="3"
+                placeholder="Automatically populated from the online game database..."></textarea>
+            </label>
+
+            <div class="form-two-col">
+              <label>
+                <span>Cover Art URL (or Local Photo)</span>
+                <input id="customCoverUrl" type="text" placeholder="Auto-filled cover URL" />
+              </label>
+              <label>
+                <span>Hero Wallpaper URL</span>
+                <div class="input-row" style="margin-bottom:0;">
+                  <input id="customHeroUrl" type="text" placeholder="Auto-filled hero banner URL" />
+                  <button id="pickHeroFileBtn" class="small-cyan-btn" type="button"
+                    title="Pick local hero wallpaper image">Pick</button>
+                </div>
+              </label>
+            </div>
+
+            <label>
+              <span>Optional Launch Arguments</span>
+              <input id="customArgs" type="text" placeholder="-novid -dx12" />
+            </label>
+
+            <label class="checkbox-row">
+              <input id="customDeepOpt" type="checkbox" checked />
+              <span>Run Deep System Optimizations (Purge Standby RAM &amp; Enable Game Mode) before launch</span>
+            </label>
+
+            <button class="ps5-play-btn small full-width" type="submit">Add Game to PlayCraft Library</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Universal Game Scanner • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="scannerDialog" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 3: PER-GAME WORKSPACE (SAVE VAULT, HZ SWITCHER, NOTES & MODS)
+       ======================================================================== -->
+  <dialog id="workspaceDialog" class="ps5-dialog wide-dialog" closedby="any" aria-labelledby="workspaceDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="workspaceDialogTitle">Game Workspace: <span id="wsGameTitle" class="cyan-highlight">Selected
+              Game</span></h2>
+          <p class="dialog-sub">Save-Game Backup Vault, Monitor Refresh Rate (Hz) Switcher, Mod Folder &amp; In-Overlay
+            Notes</p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="workspaceDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="dialog-grid-two">
+      <!-- Left Column: Save-Game Backup Vault & Display Hz / Audio Switcher -->
+      <div class="scanner-col">
+        <div class="step-card">
+          <div class="step-badge">SAVE-GAME SNAPSHOT VAULT</div>
+          <h3>Local Save Backup &amp; 1-Click Restore</h3>
+          <p class="muted-text">Protect your save files against corruption with timestamped local snapshots.</p>
+          <div class="input-row">
+            <input id="wsSaveFolderPath" type="text" placeholder="Save game folder path (auto-detected or pick)..." />
+            <button id="wsPickSaveFolderBtn" class="small-cyan-btn" type="button">Pick</button>
+            <button id="wsOpenSaveFolderBtn" class="small-cyan-btn" type="button">Open</button>
+          </div>
+          <label class="checkbox-row">
+            <input id="wsAutoBackupSaves" type="checkbox" />
+            <span>Automatically snapshot save folder every time before launching this game</span>
+          </label>
+          <div class="opt-btn-row">
+            <button id="wsCreateBackupNowBtn" class="ps5-play-btn small" type="button">Create Save Snapshot Now</button>
+          </div>
+          <div id="wsBackupsList" class="backups-list-box">
+            <div class="db-empty-hint">No snapshots created for this game yet.</div>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">DISPLAY REFRESH RATE (HZ) &amp; AUDIO</div>
+          <h3>Per-Game Monitor Mode &amp; Sound Mixer</h3>
+          <p class="muted-text">Automatically switch monitor resolution/Hz when launching and restore desktop defaults
+            on exit.</p>
+          <div class="form-two-col">
+            <label>
+              <span style="font-size:0.75rem;color:var(--ps5-muted);display:block;margin-bottom:4px;">Target Resolution
+                &amp; Refresh Rate</span>
+              <select id="wsDisplayModeSelect" class="clean-select">
+                <option value="">Keep Desktop Default</option>
+              </select>
+            </label>
+            <label>
+              <span style="font-size:0.75rem;color:var(--ps5-muted);display:block;margin-bottom:4px;">Launch
+                Profile</span>
+              <select id="wsLaunchProfileSelect" class="clean-select">
+                <option value="Default">Default Profile</option>
+                <option value="Modded">Modded Profile</option>
+                <option value="Windowed">Safe / Windowed</option>
+              </select>
+            </label>
+          </div>
+          <div class="opt-btn-row" style="margin-top: 12px;">
+            <button id="wsOpenAudioMixerBtn" class="ps5-secondary-btn" type="button">Open Windows Per-App Audio Output
+              Mixer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Per-Game Notes (Visible in Overlay) & Mod Folder Manager -->
+      <div class="scanner-col">
+        <div class="step-card">
+          <div class="step-badge">GAME ARTWORK &amp; MOD FOLDER</div>
+          <h3>Cover Photo, Hero Banner &amp; Mods</h3>
+          <div class="input-row">
+            <input id="wsCoverUrlInput" type="text" placeholder="Game Cover Photo URL or local image..." />
+            <button id="wsPickCoverImgBtn" class="small-cyan-btn" type="button">Pick Cover</button>
+          </div>
+          <div class="input-row">
+            <input id="wsHeroUrlInput" type="text" placeholder="Hero Background URL or local image..." />
+            <button id="wsPickHeroImgBtn" class="small-cyan-btn" type="button">Pick Hero</button>
+          </div>
+          <div class="input-row" style="margin-bottom:0;">
+            <input id="wsModFolderPath" type="text" placeholder="Mod folder or game directory path..." />
+            <button id="wsPickModFolderBtn" class="small-cyan-btn" type="button">Pick</button>
+            <button id="wsOpenModFolderBtn" class="small-cyan-btn" type="button">Explorer</button>
+          </div>
+        </div>
+
+        <div class="step-card">
+          <div class="step-badge">GAME NOTES &amp; IN-OVERLAY CHECKLIST</div>
+          <h3>Personal Notes, Builds &amp; Codes</h3>
+          <p class="muted-text">Saved per game and accessible anytime in-game via the <kbd>Ctrl+Shift+O</kbd> PlayCraft
+            Overlay.</p>
+          <div class="custom-game-form">
+            <textarea id="wsGameNotes" rows="7"
+              placeholder="Write build notes, quest reminders, server IPs, or keybinds for this game..."></textarea>
+            <button id="wsSaveConfigBtn" class="ps5-play-btn small full-width" type="button">Save Game Workspace
+              Settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Game Workspace • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="workspaceDialog" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 4: MOBILE CONTROLLER PAIRING (PS5 + XBOX + GYRO + PC TRACKPAD)
+       ======================================================================== -->
+  <dialog id="mobileDialog" class="ps5-dialog" closedby="any" aria-labelledby="mobileDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="mobileDialogTitle">PlayCraft Mobile Controller App Bridge</h2>
+          <p class="dialog-sub">Native Android Controller App • Wi-Fi, Phone Hotspot, Bluetooth RFCOMM &amp; USB Mode
+          </p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="mobileDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="dialog-grid-two">
+      <div class="qr-panel">
+        <div id="qrCodeContainer" class="qr-box" aria-label="Mobile Pairing QR Code"></div>
+        <div class="pin-display-box">
+          <span class="pin-label">PAIRING PIN</span>
+          <span id="pairingPinValue" class="pin-digits">----</span>
+          <button id="regenPinBtn" class="small-cyan-btn" type="button">New PIN</button>
+        </div>
+        <div class="endpoint-meta">
+          <div><strong>All PC IPs:</strong> <code id="availableIpsText">127.0.0.1</code></div>
+          <div><strong>Bluetooth SPP:</strong> <span id="btSppStatusText">Checking PC Radio...</span></div>
+          <div><strong>WebSocket Port:</strong> <code id="wsUrlText">ws://127.0.0.1:19550/ws</code></div>
+          <div><strong>App Pair URI:</strong> <code id="pairingUrlText">playcraft://pair</code></div>
+          <div><strong>Input Bridge:</strong> <span id="controllerBackendText">ViGEm Xbox 360 + ScanCode Bridge</span></div>
+          <div><strong>Android APK:</strong> <code id="mobileApkPathText">Building mobile-app/PlayCraft-Controller.apk</code></div>
+        </div>
+        <button id="setupUsbBridgeBtn" class="ps5-secondary-btn small full-width" style="margin-top:8px;" type="button">
+          Bridge Phone via USB Cable (ADB)
+        </button>
+      </div>
+
+      <div class="mobile-details-panel">
+        <h3>Connect via PlayCraft Controller Android App</h3>
+        <p class="muted-text">
+          Install &amp; open the <strong>PlayCraft Controller</strong> app on your Android phone (browser controller removed so hardware 60Hz+ gyroscope works natively without HTTPS blocks). Supports <strong>Same Wi-Fi</strong>, <strong>Phone Hotspot</strong>, <strong>Bluetooth Direct SPP</strong>, <strong>USB Cable</strong>, and <strong>Remember Me Auto-Connect</strong>!
+        </p>
+
+        <div class="connected-devices-box">
+          <div class="box-header">
+            <span>Connected Mobile Controllers</span>
+            <span id="totalInputsBadge" class="badge-cyan">0 Inputs Processed</span>
+          </div>
+          <div id="connectedClientsList" class="clients-list">
+            <div class="empty-client">Open PlayCraft Controller App on Android &amp; tap Auto-Find PC or Scan QR...</div>
+          </div>
+        </div>
+
+        <div class="virtual-pad-tester">
+          <div class="box-header">
+            <span>Desktop Loopback Input Tester</span>
+          </div>
+          <div class="sim-pad-grid">
+            <button class="sim-btn" data-sim="LEFT" type="button">D-Pad Left</button>
+            <button class="sim-btn" data-sim="RIGHT" type="button">D-Pad Right</button>
+            <button class="sim-btn" data-sim="CROSS" type="button">A / Cross</button>
+            <button class="sim-btn" data-sim="CIRCLE" type="button">B / Circle</button>
+            <button class="sim-btn" data-sim="L1" type="button">LB / L1</button>
+            <button class="sim-btn" data-sim="R1" type="button">RB / R1</button>
+            <button class="sim-btn" data-sim="TRIANGLE" type="button">Y / Triangle</button>
+            <button class="sim-btn" data-sim="PS_HOME" type="button">Home Overlay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Wireless Controller Server • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="mobileDialog" type="button">Done</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 5: DEEP OPTIMIZATIONS & DRM BYPASS
+       ======================================================================== -->
+  <dialog id="optimizerDialog" class="ps5-dialog" closedby="any" aria-labelledby="optimizerDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="optimizerDialogTitle">Deep System Optimizations &amp; Launch Flags</h2>
+          <p class="dialog-sub">Pre-Launch Standby RAM Working-Set Purge, Windows Game Mode &amp; Process Restore</p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="optimizerDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div class="dialog-grid-two">
+      <div class="optimizer-col">
+        <h3>Pre-Launch Deep Optimization Engine</h3>
+        <div class="opt-toggles">
+          <label class="checkbox-row">
+            <input id="optGameMode" type="checkbox" checked />
+            <span>Enable Windows Game Mode Registry Flag (<code>AutoGameModeEnabled = 1</code>)</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="optPurgeRam" type="checkbox" checked />
+            <span>Purge Process Working Sets via Win32 <code>K32EmptyWorkingSet</code></span>
+          </label>
+          <label class="checkbox-row">
+            <input id="optKillBloat" type="checkbox" checked />
+            <span>Suspend Non-Essential Background Bloatware During Gameplay</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="optAutoRestore" type="checkbox" checked />
+            <span>Auto-Restore Terminated Processes When Game Exits</span>
+          </label>
+        </div>
+
+        <label class="bloat-list-label">
+          <span>Target Background Processes That Eat RAM During Games (comma-separated)</span>
+          <textarea id="optBloatList" rows="3"
+            style="width:100%;background:var(--ps5-bg-deep);border:1px solid var(--border-strong);border-radius:var(--radius-md);color:var(--ps5-text);padding:9px 12px;font-family:var(--font-mono);font-size:0.76rem;line-height:1.45;resize:vertical;">Cortana.exe, YourPhone.exe, PhoneExperienceHost.exe, Widgets.exe, WidgetService.exe, GameBarPresenceWriter.exe, SearchApp.exe, Spotify.exe, SpotifyWebHelper.exe, iTunesHelper.exe, AdobeARM.exe, CCXProcess.exe, CCLibrary.exe, AdobeIPCBroker.exe, AdobeNotificationClient.exe, CoreSync.exe, AdobeUpdateService.exe, Teams.exe, ms-teams.exe, Slack.exe, Zoom.exe, Dropbox.exe, GoogleDriveFS.exe, GoogleUpdate.exe, BraveUpdate.exe, Overwolf.exe, Wallpaper32.exe, Wallpaper64.exe, ArmouryCrate.UserSessionHelper.exe, RazerCentralService.exe, LGHUB_agent.exe, WinStore.App.exe, CalculatorApp.exe</textarea>
+        </label>
+
+        <div class="opt-btn-row">
+          <button id="execDeepOptBtn" class="ps5-play-btn small" type="button">Run Deep Optimization Now</button>
+          <button id="restoreProcsBtn" class="ps5-secondary-btn" type="button">Restore Processes</button>
+        </div>
+
+        <div id="optimizerReportBox" class="scan-status-box">
+          Ready. Click "Run Deep Optimization Now" to reclaim standby RAM.
+        </div>
+      </div>
+
+      <div class="optimizer-col">
+        <h3>Per-Game Launch Flags: <span id="drmTargetTitle" class="cyan-highlight">Selected Game</span></h3>
+        <div class="opt-toggles">
+          <label class="checkbox-row">
+            <input id="drmEnable" type="checkbox" checked />
+            <span>Enable Custom Direct-Binary Execution &amp; Launch Flags</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="drmDirectShipping" type="checkbox" checked />
+            <span>Resolve Direct <code>*-Win64-Shipping.exe</code> Binary (Skip Sub-Launcher)</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="drmSteamStub" type="checkbox" />
+            <span>Inject <code>-nosteam</code> Direct Execution Flag</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="drmEpicPortal" type="checkbox" />
+            <span>Inject <code>-epicportal</code> Portal Bypass Flag</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="drmOfflineEnv" type="checkbox" />
+            <span>Set Local Offline Environment Variables (<code>STEAM_OFFLINE=1</code>)</span>
+          </label>
+          <label class="checkbox-row">
+            <input id="drmHighPriority" type="checkbox" checked />
+            <span>Spawn Process with Win32 <code>HIGH_PRIORITY_CLASS</code></span>
+          </label>
+        </div>
+
+        <label class="bloat-list-label">
+          <span>Custom Per-Game CLI Arguments</span>
+          <input id="drmCustomArgs" type="text" placeholder="-novid -high -dx12" />
+        </label>
+
+        <button id="saveGameDrmBtn" class="ps5-play-btn small full-width" type="button">
+          Save Per-Game Launch Profile
+        </button>
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Deep Optimizer • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="optimizerDialog" type="button">Done</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 6: PLAYTIME ANALYTICS & SESSION HISTORY LOG
+       ======================================================================== -->
+  <dialog id="analyticsDialog" class="ps5-dialog wide-dialog" closedby="any" aria-labelledby="analyticsDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="analyticsDialogTitle">Playtime Analytics &amp; Session History</h2>
+          <p class="dialog-sub">Real Recorded Gameplay Sessions, Store Distribution &amp; Storage Breakdown</p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="analyticsDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div id="analyticsSummaryCards" class="specs-grid-container"
+      style="grid-template-columns: repeat(4, 1fr); margin-bottom: 18px;"></div>
+
+    <h3 style="font-size: 0.96rem; margin-bottom: 8px;">Recorded Gameplay Sessions</h3>
+    <div id="sessionHistoryTableWrap" class="session-history-wrap">
+      <div class="db-empty-hint">No gameplay sessions recorded yet. Launch any game to track real session duration.
+      </div>
+    </div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Telemetry &amp; Analytics • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="analyticsDialog" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       MODAL 7: ALL GAMES GRID LIBRARY DRAWER (SORT, FILTER & QUICK LAUNCH)
+       ======================================================================== -->
+  <dialog id="libraryGridDialog" class="ps5-dialog wide-dialog" closedby="any" aria-labelledby="libraryGridDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="libraryGridDialogTitle">All Installed Games Library Grid</h2>
+          <p class="dialog-sub">Browse, filter, favorite, or launch any title in a responsive multi-column desktop grid
+          </p>
+        </div>
+      </div>
+      <button class="dialog-close-btn" data-close-dialog="libraryGridDialog" type="button" aria-label="Close">×</button>
+    </div>
+
+    <div id="libraryFullGridContainer" class="library-full-grid"></div>
+
+    <div class="dialog-footer">
+      <span>PlayCraft Library Manager • Rashmina Fernando (<a href="https://www.rashmina.dev" target="_blank"
+          rel="noopener">www.rashmina.dev</a>)</span>
+      <button class="ps5-secondary-btn" data-close-dialog="libraryGridDialog" type="button">Close</button>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       DESKTOP RIGHT-CLICK CONTEXT MENU POPOVER
+       ======================================================================== -->
+  <div id="tileContextMenu" class="tile-context-menu hidden" role="menu" aria-label="Game Quick Actions">
+    <div id="ctxMenuGameTitle" class="ctx-menu-header">Selected Game</div>
+    <button type="button" class="ctx-menu-item" data-ctx-action="play">▶ Play Game Now</button>
+    <button type="button" class="ctx-menu-item" data-ctx-action="favorite">★ Toggle Favorite / Pin</button>
+    <button type="button" class="ctx-menu-item" data-ctx-action="workspace">⚙ Saves, Refresh Rate (Hz) &amp;
+      Notes</button>
+    <button type="button" class="ctx-menu-item" data-ctx-action="drm">🛡 Launch Flags &amp; Direct Binary</button>
+    <button type="button" class="ctx-menu-item" data-ctx-action="folder">📁 Open Installation Folder</button>
+    <div class="ctx-menu-divider"></div>
+    <button type="button" class="ctx-menu-item danger" data-ctx-action="remove">🗑 Remove from PlayCraft</button>
+  </div>
+
+  <!-- ========================================================================
+       GLOBAL IN-GAME OVERLAY (Triggered via Controller Home Button or Ctrl+Shift+O)
+       ======================================================================== -->
+  <aside id="overlayDrawer" class="playcraft-overlay hidden" aria-label="PlayCraft Global Game Overlay">
+    <div class="overlay-card">
+      <div class="overlay-top">
+        <div class="overlay-brand">
+          <img src="assets/playcraft-logo.png" alt="PlayCraft" />
+          <div>
+            <strong>PLAYCRAFT IN-GAME OVERLAY</strong>
+            <span>Rashmina Fernando (www.rashmina.dev)</span>
+          </div>
+        </div>
+        <button id="closeOverlayBtn" class="dialog-close-btn" type="button">×</button>
+      </div>
+
+      <div class="overlay-metrics-grid">
+        <div class="overlay-metric">
+          <span class="m-label">CPU LOAD</span>
+          <span id="ovCpu" class="m-val">0.0%</span>
+        </div>
+        <div class="overlay-metric">
+          <span class="m-label">RAM USAGE</span>
+          <span id="ovRam" class="m-val">-- / -- GB</span>
+        </div>
+        <div class="overlay-metric">
+          <span class="m-label">ACTIVE PROCESS</span>
+          <span id="ovActiveGame" class="m-val cyan">Idle</span>
+        </div>
+        <div class="overlay-metric">
+          <span class="m-label">CONTROLLERS</span>
+          <span id="ovControllers" class="m-val">Ready</span>
+        </div>
+      </div>
+
+      <div id="ovGameNotesBox" class="overlay-notes-box">
+        <span class="m-label">ACTIVE GAME NOTES</span>
+        <div id="ovGameNotesContent" class="ov-notes-text">No notes saved for this game. Click "Saves, Hz &amp; Notes"
+          to add notes.</div>
+      </div>
+
+      <div class="overlay-quick-actions">
+        <button id="ovPurgeRamBtn" class="small-cyan-btn" type="button">Purge Standby RAM</button>
+        <button id="ovOpenMedalBtn" class="small-cyan-btn" type="button">Open Medal.tv</button>
+        <button id="ovOpenMobileBtn" class="small-cyan-btn" type="button">Mobile Controller QR</button>
+        <button id="ovRestoreBtn" class="small-cyan-btn" type="button">Restore Processes</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONFIRMATION & STEP WARNING MODAL (Launch / Exit / Alt+F4 / Optimizer / Delete) -->
+  <dialog id="confirmActionDialog" class="ps5-dialog confirm-dialog" closedby="any" aria-labelledby="confirmDialogTitle">
+    <div class="dialog-header">
+      <div class="dialog-title-group">
+        <img src="assets/playcraft-logo.png" alt="PlayCraft" class="dialog-logo" />
+        <div>
+          <h2 id="confirmDialogTitle">Are You Sure?</h2>
+          <p id="confirmDialogSubtitle" class="dialog-sub">Please review before continuing</p>
+        </div>
+      </div>
+      <button id="confirmCloseXBtn" class="dialog-close-btn" type="button" aria-label="Cancel">×</button>
+    </div>
+
+    <div class="confirm-body">
+      <p id="confirmDialogMessage" class="confirm-message">Do you want to proceed?</p>
+      <div id="confirmDialogWarning" class="confirm-warning-box hidden"></div>
+    </div>
+
+    <div class="confirm-actions-row">
+      <button id="confirmCancelBtn" class="ps5-secondary-btn" type="button">Cancel (Esc)</button>
+      <button id="confirmSecondaryBtn" class="ps5-secondary-btn hidden" type="button">Minimize to Tray</button>
+      <button id="confirmProceedBtn" class="ps5-play-btn" type="button">Confirm</button>
+    </div>
+  </dialog>
+
+  <!-- IN-APP UPDATE ARRIVAL BANNER (Triggered by daily silent GitHub Release check) -->
+  <aside id="updateArrivalBanner" class="update-arrival-banner hidden" role="region" aria-label="PlayCraft Update Available">
+    <div class="update-banner-head">
+      <span class="update-banner-badge">UPDATE ARRIVED</span>
+      <strong id="updateBannerTitle">New PlayCraft Version Available</strong>
+      <button id="dismissUpdateBannerBtn" class="dialog-close-btn" type="button" aria-label="Dismiss Update Banner">×</button>
+    </div>
+    <p id="updateBannerMessage" class="update-banner-msg">A new release is available on GitHub.</p>
+    <div class="update-banner-actions">
+      <button id="bannerGetUpdateBtn" class="ps5-play-btn small" type="button">Get Update on GitHub</button>
+      <button id="bannerLaterBtn" class="ps5-secondary-btn" type="button">Later</button>
+    </div>
+  </aside>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="ps5Toast" class="ps5-toast hidden" role="status" aria-live="polite">
+    <div class="toast-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+    <div>
+      <div id="toastTitle" class="toast-title">PlayCraft Notification</div>
+      <div id="toastMessage" class="toast-msg">Ready</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

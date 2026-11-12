@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Glowing outer cyber steering / shield ring -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,23 A31,31 0 1,1 53.99,23 Z"
+        android:strokeColor="#3300E5FF"
+        android:strokeWidth="6.5" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M54,23 A31,31 0 1,1 53.99,23 Z"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.8" />
+    <!-- Top Cyan Racing Center Marker -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M50,20 L58,20 L57,26 L51,26 Z" />
+    <!-- Futuristic Controller Crest & Analog Grips -->
+    <path
+        android:fillColor="#0E1729"
+        android:pathData="M34,46 C31,46 28,49 27,54 L25,67 C24.5,70.5 27,73 30,72.5 C32,72 34,70 36.5,67 L40,63 L68,63 L71.5,67 C74,70 76,72 78,72.5 C81,73 83.5,70.5 83,67 L81,54 C80,49 77,46 74,46 Z"
+        android:strokeColor="#00E5FF"
+        android:strokeWidth="2.4" />
+    <!-- D-Pad Left -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M36,51 h3 v3 h3 v3 h-3 v3 h-3 v-3 h-3 v-3 h3 z" />
+    <!-- Action Diamond Right -->
+    <path android:fillColor="#00E5FF" android:pathData="M71,51.5 a1.7,1.7 0 1,0 0.01,0" />
+    <path android:fillColor="#00E5FF" android:pathData="M71,57.5 a1.7,1.7 0 1,0 0.01,0" />
+    <path android:fillColor="#00E5FF" android:pathData="M68,54.5 a1.7,1.7 0 1,0 0.01,0" />
+    <path android:fillColor="#00E5FF" android:pathData="M74,54.5 a1.7,1.7 0 1,0 0.01,0" />
+    <!-- Center PS/PlayCraft Core Pulse -->
+    <path
+        android:fillColor="#00E5FF"
+        android:pathData="M54,51 L58,55.5 L54,60 L50,55.5 Z" />
+</vector>

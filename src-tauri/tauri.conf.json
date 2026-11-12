@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "PlayCraft by Rashmina Fernando",
+  "version": "1.0.0",
+  "identifier": "dev.rashmina.playcraft",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "PlayCraft by Rashmina Fernando (www.rashmina.dev)",
+        "width": 1920,
+        "height": 1080,
+        "minWidth": 1024,
+        "minHeight": 640,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "center": true,
+        "backgroundColor": "#070B14",
+        "additionalBrowserArgs": "--enable-gpu-rasterization --enable-zero-copy --enable-smooth-scrolling --autoplay-policy=no-user-gesture-required --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding --disable-features=msWebOOUI,msPdfOOUI"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis", "msi"],
+    "publisher": "Rashmina Fernando (www.rashmina.dev)",
+    "copyright": "Copyright (c) 2026 Rashmina Fernando (www.rashmina.dev). All Rights Reserved.",
+    "category": "Game",
+    "shortDescription": "PlayCraft Next-Gen Game Launcher by Rashmina Fernando (www.rashmina.dev)",
+    "longDescription": "PlayCraft is a highly optimized, next-gen native Windows game launcher styled like the PS5 home menu with mobile controller pairing and deep system optimizations. Created by Rashmina Fernando (www.rashmina.dev).",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "displayLanguageSelector": false
+      }
+    }
+  }
+}
