@@ -4,8 +4,9 @@
 **/*.rs.bk
 Cargo.lock
 
-# Packaged Zip Bundles (keep source & installer scripts)
+# Packaged Zip Bundles & Third-Party Binary Installers
 /dist-bundle/
+ViGEmBus_*.exe
 
 # Local User Runtime State
 playcraft_library.json

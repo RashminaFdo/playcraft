@@ -45,14 +45,15 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "..\dist-bundle\PlayCraft-by-Rashmina-Fernando\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; DestName: "LICENSE.txt"; Flags: ignoreversion
+Source: "..\ViGEmBus_1.22.0_x64_x86_arm64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: ViGEmBusMissing
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
+Filename: "{tmp}\ViGEmBus_1.22.0_x64_x86_arm64.exe"; Description: "Install ViGEmBus Controller Driver (Required for Forza Gyro & Xbox Vibration)"; Check: ViGEmBusMissing; Flags: postinstall shellexec waituntilterminated skipifsilent
 Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
-Filename: "https://github.com/nefarius/ViGEmBus/releases/latest"; Description: "Download ViGEmBus Driver (Recommended for Forza Gyro & Xbox Vibration)"; Check: ViGEmBusMissing; Flags: postinstall shellexec skipifsilent unchecked
 
 [Code]
 procedure CloseRunningPlayCraft();

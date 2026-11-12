@@ -6,54 +6,119 @@
 
 <br />
 
-<h3>A Unified PS5-Styled Native Windows Game Launcher &amp; 6DoF Gyro Android Controller Ecosystem</h3>
-<p><em>Every game you own (Steam, Epic, GOG, Ubisoft, standalone, portable, or offline) in one console-grade hub, controlled by your phone as a real XInput / DualSense-style gamepad or Force-Feedback Gyro Racing Wheel.</em></p>
+<h3>PS5-Styled Native Windows Game Launcher &amp; 6DoF Gyro Android Controller Ecosystem</h3>
+<p><em>Unify every game on your PC (Steam, Epic, GOG, Ubisoft, standalone, offline, or pirated copies) into one 60+ FPS console hub, driven by your phone as a real XInput / DualSense-style gamepad or Force-Feedback Gyro Racing Wheel.</em></p>
 
 <p>
-  <a href="https://github.com/RashminaFdo/playcraft/releases"><img src="https://img.shields.io/github/v/release/RashminaFdo/playcraft?style=for-the-badge&color=00E5FF&labelColor=0D1321&label=Latest%20Release" alt="Latest Release" /></a>
-  <a href="https://github.com/RashminaFdo/playcraft"><img src="https://img.shields.io/badge/Desktop-Rust%20%2B%20Tauri%20v2-00E5FF?style=for-the-badge&logo=rust&logoColor=white&labelColor=0D1321" alt="Rust and Tauri v2" /></a>
-  <a href="https://github.com/RashminaFdo/playcraft"><img src="https://img.shields.io/badge/Mobile-Android%20Kotlin%20APK-10B981?style=for-the-badge&logo=android&logoColor=white&labelColor=0D1321" alt="Android Kotlin APK" /></a>
-  <a href="https://github.com/RashminaFdo/playcraft"><img src="https://img.shields.io/badge/Input-ViGEmBus%20XInput%20%2B%206DoF%20Gyro-F59E0B?style=for-the-badge&labelColor=0D1321" alt="ViGEmBus XInput and 6DoF Gyro" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Rashmina%20Fernando-8E96A8?style=for-the-badge&labelColor=0D1321" alt="License" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft/releases/latest"><img src="https://img.shields.io/github/v/release/RashminaFdo/playcraft?style=for-the-badge&color=00E5FF&labelColor=0D1321&label=Latest%20Release" alt="Latest Release v1.0.0" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Setup-v1.0.0.exe"><img src="https://img.shields.io/badge/Download-Windows%20Setup%20v1.0.0-00E5FF?style=for-the-badge&logo=windows&logoColor=white&labelColor=0D1321" alt="Download Windows Installer" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Controller.apk"><img src="https://img.shields.io/badge/Download-Android%20APK-10B981?style=for-the-badge&logo=android&logoColor=white&labelColor=0D1321" alt="Download Android Controller APK" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft"><img src="https://img.shields.io/badge/Built%20With-Rust%20%2B%20Tauri%20v2%20%2B%20Kotlin-F59E0B?style=for-the-badge&labelColor=0D1321" alt="Rust Tauri Kotlin" /></a>
   <a href="https://www.rashmina.dev"><img src="https://img.shields.io/badge/Creator-www.rashmina.dev-00E5FF?style=for-the-badge&labelColor=0D1321" alt="Creator Website" /></a>
 </p>
 
 <p>
   <a href="#why-i-built-playcraft">Why PlayCraft?</a> &bull;
+  <a href="#screenshots-showcase">Screenshots</a> &bull;
   <a href="#console-boot-experience">Boot Intro</a> &bull;
-  <a href="#pc-launcher-features">PC Launcher Features</a> &bull;
+  <a href="#pc-launcher-features">PC Launcher &amp; Optimizer</a> &bull;
   <a href="#android-controller-features">Mobile Controller App</a> &bull;
-  <a href="#system-architecture">Architecture</a> &bull;
   <a href="#getting-started">Download &amp; Setup</a> &bull;
-  <a href="#building-from-source">Build from Source</a>
+  <a href="#building-from-source">Build</a>
 </p>
 
-</div>
-
----
-
-## Console Boot Experience
-
-<div align="center">
-  <img src="docs/boot-intro.gif" alt="PlayCraft Console Boot Intro Sequence" width="680" />
-  <br />
-  <sub><strong>PlayCraft Neon Particle Boot Sequence:</strong> Plays full-bleed on both Windows Launcher &amp; Android Controller startup (<a href="ui/assets/boot_intro.mp4">watch original 1080p MP4 with audio</a>). Toggleable or replayable anytime.</sub>
 </div>
 
 ---
 
 ## Why I Built PlayCraft
 
-PlayCraft was engineered by **[Rashmina Fernando](https://www.rashmina.dev)** to solve two real frustrations every PC gamer hits:
+PlayCraft was engineered by **[Rashmina Fernando](https://www.rashmina.dev)** to fix two real problems I kept running into every day as a PC gamer:
 
-1. **The Fragmented & Standalone Game Problem**
-   Your games shouldn't be scattered across five different background-hogging launchers, and standalone, portable, DRM-free, `.bat`-wrapped, or offline `.exe` builds shouldn't be second-class citizens without covers, playtime tracking, save backups, or controller support. PlayCraft puts **every single game you have** into one 60+ FPS PlayStation-inspired living-room dashboard.
+1. **There Was No Clean Unified Launcher For Every Single Game (Even Pirated / Offline Copies)**
+   My games were spread everywhere across Steam, Epic Games, GOG Galaxy, Ubisoft Connect, standalone folders, custom `.bat`/`.lnk` launchers, and pirated or offline copies that had no cover art, no playtime tracker, no save backups, no FPS optimization, and no easy controller support. PlayCraft solves that by putting **every single game you own, regardless of where it came from**, into one fast, 60+ FPS PlayStation-inspired home menu with automatic artwork, full root disk size detection, save snapshots, and pre-launch optimization.
 
-2. **The Real Controller & Racing Wheel Problem**
-   Playing racing games like **Forza Horizon** on keyboard keys (`A` / `D` tap-steering) ruins cornering precision, and browser-based phone controllers either stutter or get **blocked from reading your phone's gyroscope by HTTPS browser rules**.
-   So PlayCraft pairs a **dedicated native Android Controller App** with a **Rust + ViGEmBus kernel bridge**:
-   - Windows sees your phone as a **real physical Xbox 360 / XInput controller** with true analog steering, progressive pedals, and **real in-game vibration (force-feedback rumble)** when you hit curbs, gravel, or crashes.
-   - Flip between **Wheel Mode** (6DoF IMU Gyro), **Gamepad Mode**, **PS5 DualSense theme** (`△ ○ × □`), **Xbox theme** (`Y B A X`), and **X360 XInput ↔ Keyboard ScanCodes** **live during gameplay** without restarting anything.
+2. **Keyboard Racing Controls Suck &amp; Browser Controllers Block Your Gyroscope**
+   Playing racing games like **Forza Horizon** on keyboard keys (`A` / `D` tap-steering) ruins smooth cornering, and browser-based mobile controllers constantly stutter or get **blocked from accessing phone gyroscopes by browser HTTPS security rules**.
+   So PlayCraft pairs a **dedicated native Android Controller App** directly with a **Rust + ViGEmBus kernel driver bridge**:
+   - Windows detects your phone as a **real Xbox 360 / XInput controller** with analog steering, progressive pedals, and **real in-game vibration (force-feedback rumble)**.
+   - Switch **Pad ↔ Gyro Steering Wheel**, **PS5 DualSense (`△ ○ × □`) ↔ Xbox (`Y B A X`) visual shell**, and **X360 XInput ↔ Hardware ScanCode Keys** **live while your game is running**.
+
+---
+
+## Screenshots Showcase
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <strong>PlayCraft Windows Console Launcher</strong><br />
+      <img src="Screenshots/Windows/Main%20menu.png" alt="PlayCraft Windows Home Menu" width="100%" />
+      <sub>PS5-styled home carousel with live RAM/FPS telemetry, hero artwork &amp; root disk footprint</sub>
+    </td>
+    <td align="center" width="50%">
+      <strong>Forza-Ready 6DoF Gyro Racing Wheel (Android)</strong><br />
+      <img src="Screenshots/Mobile/gyro%20controller.jpg" alt="PlayCraft Mobile Gyro Steering Wheel" width="100%" />
+      <sub>Real-time IMU carbon steering wheel, paddle shifters, Rewind, E-Brake &amp; progressive pedals</sub>
+    </td>
+  </tr>
+</table>
+
+<details>
+<summary><strong>Windows PC Launcher Gallery (Click to Browse All 10 Screens)</strong></summary>
+<br />
+
+| Home Spotlight &amp; Telemetry | Universal Scanner &amp; Auto Artwork | Deep Optimizer &amp; Launch Flags |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Windows/Main%20menu.png" alt="Main Menu" width="280" /> | <img src="Screenshots/Windows/adding%20games.png" alt="Add Game and Online Match" width="280" /> | <img src="Screenshots/Windows/optimizer.png" alt="Deep System Optimizations" width="280" /> |
+| *Main Console Carousel* | *`.exe`/`.bat`/`.lnk` + Online DB Match* | *RAM Purge + Bloat Auto-Restore* |
+
+| Mobile Controller Bridge &amp; QR | Playtime Analytics &amp; Sessions | 4K Wallpapers Selector |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Windows/qr%20paring.png" alt="Mobile Controller QR Pairing" width="280" /> | <img src="Screenshots/Windows/analytics.png" alt="Playtime Analytics" width="280" /> | <img src="Screenshots/Windows/settings%201.png" alt="Wallpapers and Theme" width="280" /> |
+| *Portrait QR + Multi-IP + BT + USB* | *Real Session Tracking &amp; Footprint* | *5 Bundled 4K Wallpapers* |
+
+| Window Modes, Monitor &amp; Tray | Audio &amp; Console Boot Sequence | Live PC Hardware Specifications |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Windows/settings%202.png" alt="Window Display and Monitor Settings" width="280" /> | <img src="Screenshots/Windows/settings%203.png" alt="Audio and Boot Sequence" width="280" /> | <img src="Screenshots/Windows/settings%204.png" alt="Live Hardware Specs" width="280" /> |
+| *Primary Monitor + Fullscreen/Borderless* | *WebAudio + Startup Video Controls* | *Real CPU, GPU, RAM &amp; Disk Telemetry* |
+
+| About, Authorship &amp; Auto-Updater | | |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Windows/settings%205.png" alt="About and App Updates" width="280" /> | | |
+| *Daily Update Check + GitHub Release Button* | | |
+
+</details>
+
+<details>
+<summary><strong>Android Controller App Gallery (Click to Browse All 8 Screens)</strong></summary>
+<br />
+
+| 6DoF Gyro Racing Wheel Deck | DualSense PS5 Pad + Trackpad | Xbox Gamepad Mode (Live Switch) |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Mobile/gyro%20controller.jpg" alt="Gyro Racing Wheel" width="280" /> | <img src="Screenshots/Mobile/playstation.jpg" alt="PS5 DualSense Mode" width="280" /> | <img src="Screenshots/Mobile/xbox.jpg" alt="Xbox Pad Mode" width="280" /> |
+| *Carbon Wheel + Pedals + Rewind* | *PS5 Shell + PC Mouse Trackpad* | *Runtime PS5 ↔ Xbox Toggle* |
+
+| Multi-Transport Hub &amp; Remember Me | Upfront Gaming Permissions | Controller Settings &amp; Toggles |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Mobile/connection.jpg" alt="Connection Hub" width="280" /> | <img src="Screenshots/Mobile/Permission.jpg" alt="Permissions Onboarding" width="280" /> | <img src="Screenshots/Mobile/settings%20mobile%201.jpg" alt="Mobile Settings Part 1" width="280" /> |
+| *Wi-Fi, Hotspot, Bluetooth SPP &amp; USB* | *Direct App &amp; Battery Redirects* | *Remember Me, Haptics &amp; Pedals* |
+
+| Force-Feedback &amp; Gyro Tuning | OS Shortcuts &amp; Daily Auto-Updater | |
+| :---: | :---: | :---: |
+| <img src="Screenshots/Mobile/settings%20mobile%202.jpg.jpg" alt="Gyro and Rumble Tuning" width="280" /> | <img src="Screenshots/Mobile/settings%20mobile%203.jpg" alt="Mobile Updates and Shortcuts" width="280" /> | |
+| *Rumble Scale, Angle, Deadzone &amp; Gamma* | *Direct Android Settings + GitHub Updates* | |
+
+</details>
+
+---
+
+## Console Boot Experience
+
+<div align="center">
+  <img src="docs/boot-intro.gif" alt="PlayCraft Console Boot Intro Sequence" width="660" />
+  <br />
+  <sub><strong>PlayCraft Neon Particle Boot Sequence:</strong> Plays full-bleed edge-to-edge on both Windows Launcher &amp; Android Controller startup (<a href="ui/assets/boot_intro.mp4">watch original 1080p MP4 with audio</a>). Toggleable or replayable anytime.</sub>
+</div>
 
 ---
 
@@ -86,7 +151,7 @@ flowchart LR
     end
 
     Decks <--> Link <--> Bridge
-    ViGEm -->|"Real XInput & Mouse/Keys"| Game["Forza Horizon, Steam, Epic, GOG, Ubisoft & Standalone .exe"]
+    ViGEm -->|"Real XInput & Mouse/Keys"| Game["Steam, Epic, GOG, Ubisoft, Forza & Standalone / Offline / Pirated .exe"]
 ```
 
 ---
@@ -94,85 +159,76 @@ flowchart LR
 ## PC Launcher Features
 
 ### PS5-Inspired 60+ FPS Glassmorphic Console UI
-- **Console Boot Intro**: Fullscreen `boot_intro.mp4` sequence on startup (`Esc` to skip, toggleable in Settings, replay on demand).
-- **Focus-Driven Tile Strip**: Smooth GPU-composited horizontal carousel with dual-layer crossfading hero banners, floating particle backdrop canvas, procedural **WebAudio PS5 UI Sound Engine**, real-time **FPS** + **RAM telemetry** pills, and live clock.
-- **Built-In 4K Wallpapers**: Ships with 5 bundled 4K cyber/obsidian wallpapers (`ui/assets/wallpapers/`) plus support for custom local wallpapers and an **Always Use Selected Wallpaper** lock toggle.
-- **Instant Search, Store Chips, Sorting & Grid View**: Filter by `All`, `★ Favorites`, `Steam`, `Epic`, or `Local` (`Ctrl+K`), sort by Default Order, Most Played, A–Z, or Root Disk Size, or open the responsive multi-column **All Games Grid** (`G`).
-- **Controller-First & Desktop-Ready**: Full arrow/D-pad/thumbstick spatial navigation, desktop **right-click context menu**, and explicit **"Are You Sure?"** confirmation dialogs for **Launch**, **Exit**, **`Alt+F4`**, **`Ctrl+Q`**, **`Esc`**, and **Remove Game**.
+- **Startup Console Sequence**: 9-second fullscreen `boot_intro.mp4` startup intro (`Esc` to skip, toggle on/off, or replay anytime from Settings).
+- **Smooth Focus Carousel & Hero Stage**: GPU-composited tile strip with dual-layer crossfading hero artwork, ambient particle backdrop, synthesized **WebAudio PS5 navigation & launch sound engine**, real-time **RAM telemetry pill**, **FPS counter**, and system clock.
+- **5 Built-In 4K Wallpapers + Lock Toggle**: Bundles `Cosmic Singularity Vortex`, `Planetary Cyber Grid`, `Ancient Cyber Monolith`, `Neon Night Cityscape`, and `Mecha Cyber Foundry` (`ui/assets/wallpapers/`) plus local custom wallpaper support and **Always Use Selected Wallpaper** override.
+- **Search, Store Filters, Sorting & All Games Grid**: Press `Ctrl+K` to search/filter by `All`, `★ Favorites`, `Steam`, `Epic`, or `Local`, sort by Default Order, Most Played, A-Z, or Disk Size, or open the multi-column **All Games Grid** (`G`).
+- **Desktop Context Menu & Safety Confirmations**: Right-click any tile for Play, Favorite, Saves/Hz/Notes, Launch Flags, Open Folder, or Remove. Every destructive or exit action (**Play**, **Exit**, **`Alt+F4`**, **`Ctrl+Q`**, **`Esc`**, **Remove**) asks **"Are You Sure?"** cleanly.
 
-### Multi-Monitor, Display Modes & System Tray
-- **Primary Monitor Launch & Monitor Picker**: Automatically opens cleanly on your **Primary Monitor** by default, or target any connected monitor in Settings.
-- **3 Display Modes (`F11` Cycle)**: Switch effortlessly between **Fullscreen**, **Windowed Fullscreen (Borderless)**, and **Normal Window (Resizable + Title Bar)**.
-- **Always Stays Alive During Gameplay**: Configured to keep running open cleanly in the background/foreground so your **Mobile Controller Bridge** never disconnects mid-game.
-- **Configurable Close `(X)` & Startup Behavior**: Choose between **Exit PlayCraft Completely** (cleanly unregisters ViGEm and restores suspended background apps) or **Minimize to Windows System Tray**, plus **Launch on Windows Startup**.
-- **Daily Silent Auto-Update Check**: Checks GitHub Releases once every 24 hours silently in the background when online, notifies you inside the launcher with a direct **Get Update on GitHub** button when a new release arrives, and includes a manual **Check for Updates** button in **Settings -> About**.
+### Universal Game Scanner (Steam, Epic, GOG, Ubisoft &amp; Standalone / Pirated `.exe`)
+- **Multi-Store Registry & Manifest Sync**: Automatically imports installed games, playtime, and artwork from **Steam** (`libraryfolders.vdf`, `appmanifest_*.acf`, `localconfig.vdf` + Steam CDN), **Epic Games**, **GOG Galaxy**, and **Ubisoft Connect**.
+- **Any `.exe`, `.bat`, or `.lnk` Shortcut**: Pick any offline, portable, DRM-free, or pirated build directly, or recursively bulk-scan an entire `C:\Games` folder. Features a native binary `.lnk` Shell Link parser and silent `CREATE_NO_WINDOW` (`0x08000000`) `.bat` execution (zero flashing command windows).
+- **Accurate Root Folder Size & Online Metadata Auto-Match**: Walks upward past `bin/x64` or `Win64` subfolders to calculate true root game folder GB size on disk, and queries online game databases to auto-fill description, genre, cover photo, and hero banner in 1 click (or pick local images).
 
-### Universal Game Scanner: Play *Every* Game You Own
-- **Multi-Store Registry & Manifest Auto-Sync**: Auto-imports installed titles, playtime, and metadata from **Steam** (`libraryfolders.vdf`, `appmanifest_*.acf`, `localconfig.vdf`), **Epic Games**, **GOG Galaxy**, and **Ubisoft Connect**.
-- **Standalone / Portable / Offline / `.bat` / `.lnk` Games**: Pick any `.exe`, `.bat`, or Windows `.lnk` shortcut (parsed with a native binary Shell Link reader with zero shell popups via `CREATE_NO_WINDOW`) or bulk-scan whole game directories recursively.
-- **Accurate Root Folder Size Calculation**: Automatically resolves the real root installation directory size in GB (e.g., excluding fake tiny stub folders) and performs **1-click Online Game Database auto-matching** for official descriptions, genres, cover art, and hero banners (or pick local artwork).
+### Pre-Launch Deep Optimizer &amp; Post-Game Process Auto-Restore
+- **Windows Game Mode Registry Toggle**: Enforces `HKCU\Software\Microsoft\GameBar\AutoGameModeEnabled = 1`.
+- **Win32 Standby / Working-Set RAM Purge**: Calls Win32 `OpenProcess` + `K32EmptyWorkingSet` across eligible background processes to reclaim memory before launching.
+- **33-Target Bloat Suspension & Auto-Restore**: Cleanly suspends memory-heavy background apps during gameplay (`Cortana.exe`, `YourPhone.exe`, `PhoneExperienceHost.exe`, `Widgets.exe`, `WidgetService.exe`, `GameBarPresenceWriter.exe`, `SearchApp.exe`, `Spotify.exe`, `SpotifyWebHelper.exe`, `iTunesHelper.exe`, `AdobeARM.exe`, `CCXProcess.exe`, `CCLibrary.exe`, `AdobeIPCBroker.exe`, `AdobeNotificationClient.exe`, `CoreSync.exe`, `AdobeUpdateService.exe`, `Teams.exe`, `ms-teams.exe`, `Slack.exe`, `Zoom.exe`, `Dropbox.exe`, `GoogleDriveFS.exe`, `GoogleUpdate.exe`, `BraveUpdate.exe`, `Overwolf.exe`, `Wallpaper32.exe`, `Wallpaper64.exe`, `ArmouryCrate.UserSessionHelper.exe`, `RazerCentralService.exe`, `LGHUB_agent.exe`, `WinStore.App.exe`, `CalculatorApp.exe`) while **strictly protecting** Windows core processes, PlayCraft, WebView2/Edge, and OneDrive, then **automatically relaunches suspended apps when the game closes**.
 
-### Per-Game Workspace, Save-Game Vault & Direct Launch Profiles
-- **Timestamped Save-Game Snapshot Vault**: Auto-detects likely local save paths, creates **manual or automatic pre-launch save backups**, and restores corrupted saves in **1 click**.
-- **Per-Game Resolution & Refresh Rate (Hz) Switcher**: Queries real monitor modes via Win32 `EnumDisplaySettingsW`, switches display resolution/Hz automatically for that title, and restores desktop settings when the game exits.
-- **Direct-Binary Execution & Custom Launch Flags (`DrmBypassConfig`)**:
-  - Auto-resolve Unreal Engine `*-Win64-Shipping.exe` directly to skip intermediate sub-launchers
-  - Toggle `-nosteam`, `-epicportal`, `-novid`, `STEAM_OFFLINE=1` environment injection, custom CLI arguments, `Default` / `Modded` / `Windowed` launch profiles, and Win32 **`HIGH_PRIORITY_CLASS`**
-  - Dedicated **Mod Folder** quick-open shortcut and persistent per-game **Notes** synced directly to the In-Game Overlay
+### Per-Game Workspace, Save-Game Vault &amp; Direct Launch Profiles
+- **Save-Game Snapshot Vault**: Auto-detects likely save directories, creates timestamped local snapshots manually or **automatically on every launch**, and provides **1-Click Save Restore** against corruption.
+- **Per-Game Resolution &amp; Refresh Rate (Hz) Switcher**: Enumerates real Windows display modes (`EnumDisplaySettingsW`), switches monitor resolution/Hz when launching a specific title, and restores desktop settings after exit.
+- **Direct-Binary Execution &amp; Launch Flags (`DrmBypassConfig`)**: Auto-resolve `*-Win64-Shipping.exe` directly to skip sub-launchers, toggle `-nosteam`, `-epicportal`, `-novid`, `STEAM_OFFLINE=1` env injection, custom CLI args, `Default` / `Modded` / `Windowed` launch profiles, and Win32 **`HIGH_PRIORITY_CLASS`** priority elevation.
+- **Mod Folder &amp; In-Overlay Notes**: Quick-open mod directories and save build/quest/keybind notes synced live to the In-Game Overlay.
 
-### Pre-Launch Deep Optimizer & Background Auto-Restore
-- **Windows Game Mode Enforcement**: Enables `HKCU\Software\Microsoft\GameBar\AutoGameModeEnabled = 1`.
-- **Win32 Standby RAM Purge**: Trims background process working sets via `OpenProcess` + `K32EmptyWorkingSet`.
-- **Smart Bloatware Suspension & Post-Game Auto-Restore**: Safely suspends 33 configurable memory-hungry background processes (`Teams.exe`, `Spotify.exe`, `Slack.exe`, `Adobe*`, `Overwolf.exe`, `ArmouryCrate*`, `LGHUB_agent.exe`, etc.) while strictly whitelisting Windows core, PlayCraft, WebView2, and OneDrive, then **automatically relaunches everything when your game closes**.
-
-### Global In-Game Overlay, Analytics & Media / Medal.tv
-- **Global PlayCraft Overlay** (`Ctrl+Shift+O`, Xbox Guide button, `Back + Start`, or Mobile `PS`/`Xbox` Home button): Shows live CPU %, RAM usage, active game & PID, controller bridge status, your saved **Per-Game Notes**, and quick-action buttons (**Purge Standby RAM**, **Open Medal.tv**, **Mobile Controller QR**, **Restore Processes**).
-- **Playtime Analytics & Session History**: Tracks real elapsed gameplay sessions into `playcraft_sessions.json` with library distribution cards.
-- **Media & Medal Integration**: **1-Click Open Medal.tv**, Windows Per-App Audio Output Mixer shortcut, and built-in local screenshots & clips gallery viewer.
+### Display Modes, Multi-Monitor, Tray, Overlay, Specs &amp; Daily Updater
+- **Primary Monitor Default &amp; Monitor Picker**: Always opens on your **Primary Monitor** by default, with a live monitor selector in Settings.
+- **3 Display Modes (`F11` Cycle)**: Switch seamlessly between **Fullscreen**, **Windowed Fullscreen (Borderless)**, and **Normal Window (Title Bar &amp; Resize)**.
+- **Always Stays Alive + Configurable Close `(X)`**: Keeps running open safely during gameplay so your mobile controller never drops; choose whether Close `(X)` exits cleanly (unregistering ViGEm &amp; restoring apps) or minimizes to the Windows System Tray, plus **Launch on Windows Startup**.
+- **Global In-Game Overlay (`Ctrl+Shift+O`, Guide Button, `Back+Start`, or Mobile `PS`/`Xbox` Home)**: Displays live CPU load, RAM usage, active game/PID, connected controller count, your per-game Notes, plus quick buttons (**Purge Standby RAM**, **Open Medal.tv**, **Mobile Controller QR**, **Restore Processes**).
+- **Playtime Analytics, Live PC Specs &amp; Media Hub**: Tracks real session durations (`playcraft_sessions.json`), queries full live Windows Registry/Kernel CPU, multi-GPU VRAM/drivers, motherboard/BIOS, RAM/Swap, and SSD disk bars, plus **1-Click Open Medal.tv**, Windows Audio Mixer shortcut, and local captures gallery.
+- **Daily Silent Auto-Updater + Branded Upgrades**: Checks GitHub Releases once every 24 hours silently when online, shows an in-app **Update Has Arrived** banner + top-bar pill with a **Get Update on GitHub** button, includes **Check for Updates** in Settings, and supports in-place installer upgrades that auto-close any running instance and preserve `%LOCALAPPDATA%\PlayCraft`.
 
 ---
 
 ## Android Controller Features
 
-> **Native Kotlin App (`dev.rashmina.playcraft.controller`) &bull; Treated by Android as a Real Game App (`android:isGame="true"`, `android:appCategory="game"`).**
+> **Native Kotlin App (`dev.rashmina.playcraft.controller`) &bull; Registered with `android:isGame="true"` and `android:appCategory="game"` so phones trigger native Game Mode &amp; performance governors.**
 
-### Switch PS5 ↔ Xbox, Pad ↔ Steering Wheel & X360 ↔ Keys **Live During Gameplay**
-- Tap the top segmented bar anytime **while your game is running** to switch:
-  - **Deck Mode**: **Pad** (Dual-Stick Gamepad) ↔ **Wheel** (Racing Steering Cockpit)
-  - **Console Shell**: **PS5 DualSense** (`△ ○ × □`, Cosmic Cyan) ↔ **Xbox** (`Y B A X`, Neon Emerald)
-  - **PC Driver Output**: **X360** (Real ViGEmBus XInput Controller) ↔ **Keys** (Hardware ScanCode Keyboard + Mouse)
+### Switch Layout, Brand Shell &amp; PC Driver **Live Mid-Game**
+- Use the top segmented bar anytime **while playing** without restarting your game:
+  - **Pad ↔ Wheel**: Flip between dual-stick controller and gyro steering cockpit
+  - **PS5 ↔ Xbox**: Switch cosmic cyan DualSense (`△ ○ × □`) and emerald Xbox (`Y B A X`) layouts live
+  - **X360 ↔ Keys**: Switch between real **ViGEmBus XInput hardware** and **Win32 ScanCode Keyboard/Mouse** live
 
-### 6DoF Hardware IMU Gyroscope Racing Wheel (*Recommended for Forza Horizon*)
-- **Zero HTTPS / Browser Blocks**: Direct native Android `SensorManager` pipeline prioritizing **6DoF IMU (`TYPE_GAME_ROTATION_VECTOR`)** → **Rotation Fusion (`TYPE_ROTATION_VECTOR`)** → **Accelerometer Gravity fallback**, using gimbal-lock-free rotation matrix coordinate remapping locked to your landscape rotation (`90°` / `270°`).
-- **Realistic GT / F1 Racing Cockpit (`WheelDeckView`)**:
-  - Custom-rendered **Carbon & Leather GT Steering Wheel** with titanium spokes, hex bolts, real-time LED steering telemetry arc, and tactile rumble halo
-  - Racing controls at your thumbs: **`GEAR -` (`LB`/`L1`)**, **`GEAR +` (`RB`/`R1`)**, **`E-BRAKE`**, **`REWIND`** (built right in for Forza!), **`MENU`**, **`GYRO ON/OFF`**, **`ZERO`** (1-tap re-center), and **`TUNE`**
-  - **Progressive Anodized Aluminum Slatted Pedals** (`BRAKE / REV` & `GAS / ACCEL`: tap for instant press or slide vertically to feather analog `LT` / `RT` throttle & brake, plus **Swap Pedal Sides**)
-  - **Live Steering Calibration**: Switch **HYBRID (Gyro + Touch)** / **GYRO ONLY** / **TOUCH ONLY**, and dial in **Max Turn Angle** (`20°–90°`), **Deadzone** (`0%–15%`), **Non-Linear Gamma Curve** (`0.70–2.20`), **Smoothing**, and **Invert Axis**.
+### 6DoF Hardware IMU Gyroscope Wheel (*Recommended for Forza Horizon*)
+- **Zero Browser Restrictions**: Uses Android `SensorManager` natively (**6DoF IMU `TYPE_GAME_ROTATION_VECTOR`** → **`TYPE_ROTATION_VECTOR`** → **`TYPE_ACCELEROMETER`** gravity fallback) with gimbal-lock-free matrix remapping locked to screen rotation (`90°`/`270°`).
+- **Realistic GT Carbon Steering Cockpit (`WheelDeckView`)**: Titanium spokes, hex bolts, real-time LED steering telemetry arc, tactile rumble halo, **`GEAR -` (`LB`/`L1`)**, **`GEAR +` (`RB`/`R1`)**, **`E-BRAKE`**, **`REWIND`**, **`MENU`**, **`GYRO ON/OFF`**, **`ZERO`** re-center button, and calibrated **`TOUCH STEER`** slider (**HYBRID**, **GYRO ONLY**, **TOUCH ONLY**).
+- **Progressive Slatted Gas &amp; Brake Pedals**: Tap for 100% throttle/brake or slide vertically to feather analog `LT`/`RT` triggers smoothly, with a **Swap Pedal Sides** toggle.
+- **Live Racing Calibration**: Adjust **Max Turn Angle** (`20°–90°`), **Center Deadzone** (`0%–15%`), **Non-Linear Gamma Curve** (`0.70–2.20x`), **Filter Responsiveness**, and **Invert Axis**.
 
-### Real PS5 / Xbox Force-Feedback Rumble & Audio
-- **Two-Way Game Haptics**: Captures real Windows XInput motor intensity (`large_motor` + `small_motor`) via `vigem-client` and streams rumble packets back to your phone.
-- Drives nuanced `VibrationEffect` amplitude waveforms on Android (deep impacts & engine torque from `large_motor`, sharp curb/gravel/gunfire textures from `small_motor`), plus UI haptics, synthesized `AudioTrack` navigation chimes, and an adjustable **Game Rumble Intensity (`0–100%`)** slider.
+### Real PS5 / Xbox Game Force-Feedback Rumble &amp; Audio
+- Captures real Windows XInput motor rumble (`large_motor` + `small_motor`) via `vigem-client` and streams rumble packets back over WebSocket and Bluetooth SPP.
+- Drives nuanced Android `VibrationEffect` amplitude waveforms (deep crashes/engine torque + sharp curb/gravel/gunfire textures) with an adjustable **Game Rumble Intensity (`0–100%`)** slider, **Test Rumble** button, and synthesized `AudioTrack` UI feedback.
 
 ### Responsive DualSense / Xbox Gamepad + Built-In PC Mouse Trackpad
-- Partitioned multi-screen-size canvas layout (`GamepadDeckView`) that prevents overlap across compact phones, tall widescreens, and tablets.
-- Beveled concave **`LS`** and **`RS`** analog thumbsticks with stick-click (`L3`/`R3`), full **`LT`/`LB`/`RB`/`RT`**, directional pad, colored PS5/Xbox glyphs, **`Share`/`View`**, **`Options`/`Menu`**, **`PS`/`Xbox` Home** (triggers PC Overlay), and a central **PC Mouse Trackpad** (1-finger drag to move cursor, tap for Left-Click, 2-finger tap for Right-Click).
+- Partitioned multi-screen layout (`GamepadDeckView`) prevents thumbstick/button collisions on every phone/tablet aspect ratio.
+- Features beveled concave **`LS`** / **`RS`** sticks (`L3`/`R3` click), `LT`/`LB`/`RB`/`RT`, D-pad, colored glyphs, `Share`/`View`, `Options`/`Menu`, **`PS`/`Xbox` Home** (opens PC Overlay), and a dot-matrix **PC Mouse Trackpad** (drag cursor, tap left-click, 2-finger tap right-click).
 
-### Connect Anywhere & Stay Connected Automatically
+### 4 Transports, Auto-Reconnect Watchdog &amp; Daily Updater
 | Transport Mode | When To Use | How Pairing Works |
 |---|---|---|
-| **Same Wi-Fi** | Phone & PC on same home/studio router | Auto-discovered in <1s via UDP broadcast (`:19552`), **Portrait QR Scan** (`playcraft://pair`), or PIN |
-| **Phone Hotspot** | No router available / gaming on the go | Connect laptop to your phone's hotspot; app discovers & bridges over hotspot IP directly |
-| **Bluetooth Classic SPP** | Zero Wi-Fi / offline peer-to-peer | Native Windows Bluetooth RFCOMM Serial Port Profile (PlayCraft Service UUID) |
-| **USB Cable (ADB / RNDIS)** | Ultra-low latency wired play & charging | 1-click **Bridge Phone via USB Cable (ADB)** on PC + USB transport mode in app |
+| **Same Wi-Fi** | Phone &amp; PC on same router | Auto-discovered via UDP broadcast (`:19552`), **Portrait Camera2 QR Scan** (+ Torch), or 4-digit PIN |
+| **Phone Hotspot** | No router / playing anywhere | Connect laptop to phone hotspot; app auto-discovers &amp; connects over hotspot IP |
+| **Bluetooth Classic SPP** | Zero Wi-Fi / offline direct link | Native Windows Bluetooth RFCOMM Serial Port Profile (PlayCraft Service UUID) |
+| **USB Cable (ADB / RNDIS)** | Zero wireless interference &amp; charging | 1-click **Bridge Phone via USB Cable (ADB)** on PC + USB mode in app |
 
-- **Remember Me + Infinite Auto-Reconnect**: Saves your last verified PC transport/PIN/BT MAC, reconnects automatically when you open the Android app, and monitors link health with a **2.5s heartbeat watchdog** + exponential-backoff reconnect loop (automatically resetting held buttons/sticks on drops).
-- **Daily Silent GitHub Update Check**: Quietly checks GitHub Releases once every 24 hours when online, shows an in-app update banner with a 1-tap **Get Update** button when a newer APK is published, and adds **Check for Updates** inside App Settings.
-- **Full Custom Keybind Remapper + Onboarding Permissions**: First-launch runtime permission wizard with direct OS Settings deep-links, plus per-button keyboard remapping in **Keys** mode.
+- **Remember Me &amp; `2.5s` Watchdog Reconnect**: Saves working endpoint/BT MAC, auto-connects on launch, auto-recovers on network restore, and resets stuck inputs on disconnects.
+- **Upfront Permissions Wizard, Custom Keymap &amp; OS Shortcuts**: Deep-links straight to App Permissions, Wi-Fi, Hotspot, Bluetooth, Battery Optimization, and full per-button **Edit Key Map**, plus **daily silent GitHub update checks** &amp; in-app **Check for Updates**.
 
 ---
 
-## Keyboard & Controller Shortcuts
+## Keyboard &amp; Controller Shortcuts
 
 | Shortcut / Input | Action |
 |---|---|
@@ -180,7 +236,7 @@ flowchart LR
 | `Enter` / `A` / `Cross` | Activate focused button or prompt **"Play Game"** |
 | `Esc` / `B` / `Circle` | Close active dialog / back / open Exit confirmation |
 | `Ctrl + Shift + O` / Guide / `PS` | Toggle **Global In-Game PlayCraft Overlay** |
-| `Ctrl + K` | Focus quick library search & store filter bar |
+| `Ctrl + K` | Focus quick library search &amp; store filter bar |
 | `G` / `F` / `S` / `M` | Toggle **All Games Grid** / **Favorite** / **Settings** / **Mobile Pairing** |
 | `F11` | Cycle **Fullscreen → Windowed Fullscreen → Normal Window** |
 | `Alt + F4` / `Ctrl + Q` | Prompt safe Exit / Minimize-to-Tray confirmation |
@@ -207,50 +263,45 @@ flowchart LR
 
 ## Getting Started
 
-### Option 1: Download Ready-to-Run Release Builds (Recommended)
+### Download Latest Release (`v1.0.0`)
 
-Grab the latest installers directly from **[GitHub Releases](https://github.com/RashminaFdo/playcraft/releases)**:
+| Platform | Direct Release Download | Notes |
+|---|---|---|
+| **Windows 10 / 11 Installer** | **[PlayCraft-Setup-v1.0.0.exe](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Setup-v1.0.0.exe)** | Bundles **ViGEmBus Driver** offline &amp; launches it automatically on finish if missing; upgrades close any running PlayCraft and preserve `%LOCALAPPDATA%\PlayCraft` |
+| **Android Controller (8.0+)** | **[PlayCraft-Controller.apk](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Controller.apk)** | Standalone native Android APK with 6DoF Gyro, PS5/Xbox shells, Force-Feedback &amp; auto-updater |
+| **Standalone Driver (Optional)** | **[ViGEmBus_1.22.0_x64_x86_arm64.exe](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/ViGEmBus_1.22.0_x64_x86_arm64.exe)** | Already included inside `PlayCraft-Setup-v1.0.0.exe`; also hosted separately in **[v1.0.0 Releases](https://github.com/RashminaFdo/playcraft/releases/latest)** |
 
-1. **Windows PC (`PlayCraft-Setup-v1.0.0.exe` Installer)**:
-   - Run **`PlayCraft-Setup-v1.0.0.exe`** (no admin required; installs PlayCraft cleanly into `%LOCALAPPDATA%\Programs\PlayCraft` and creates Desktop/Start Menu shortcuts).
-   - **Seamless Updates**: Running a new release installer automatically closes any active or tray-minimized PlayCraft instance, updates the app in place without losing your settings/saves in `%LOCALAPPDATA%\PlayCraft`, and relaunches it cleanly.
-   - **ViGEmBus Driver**: If ViGEmBus is not installed yet, the setup finish screen provides an optional 1-click link to **[ViGEmBus Driver](https://github.com/nefarius/ViGEmBus/releases)** so PC games see your phone as a native Xbox 360 controller with gyro steering and vibration *(Keyboard/Mouse ScanCode mode works out of the box)*.
-2. **Android Phone (`PlayCraft-Controller.apk`)**:
-   - Download and install **`PlayCraft-Controller.apk`** directly on Android 8.0+ (allow installing from unknown sources if prompted).
-   - Open PlayCraft on PC &rarr; click the **Controller Icon** (or press **`M`**) to display your QR Code & 4-digit PIN.
-   - Open **PlayCraft Controller** on Android &rarr; grant permissions &rarr; tap **Scan QR Code** or **Scan Now** (or choose **Hotspot** / **Bluetooth** / **USB**), enable **Remember Me**, and hit the track!
+1. Run **`PlayCraft-Setup-v1.0.0.exe`** on Windows (leave the ViGEmBus install checkbox checked if you haven't installed it before).
+2. Install **`PlayCraft-Controller.apk`** on your Android phone.
+3. Open **PlayCraft** on PC &rarr; click the **Controller icon** (or press **`M`**) &rarr; scan the QR code in the Android app, toggle **Remember Me**, and play.
 
 ---
 
 ## Building From Source
 
 ### Prerequisites
-- **Windows 10 / 11** (64-bit) with WebView2 Runtime & MSVC Build Tools
+- **Windows 10 / 11** (64-bit) with WebView2 Runtime &amp; MSVC Build Tools
 - **Rust toolchain** (`rustup`, stable MSVC `1.77.2+`)
-- **Inno Setup 6** (`winget install JRSoftware.InnoSetup`) to compile the Windows `Setup.exe` wizard
+- **Inno Setup 6** (`winget install JRSoftware.InnoSetup`) + `ViGEmBus_1.22.0_x64_x86_arm64.exe` at repo root to compile the Windows installer
 - **JDK 21** + **Android SDK** (`compileSdk 36`, `minSdk 26`) for building the mobile APK
 
-### 1. Compile Optimized PC Launcher & Windows Installer
+### 1. Compile PC Launcher &amp; Windows Installer
 ```powershell
-# Compile stripped LTO-optimized Windows release binary
 cargo build --manifest-path src-tauri/Cargo.toml --release
-
-# Run Rust test suite
 cargo test --manifest-path src-tauri/Cargo.toml
 
-# Build Windows Installer (outputs dist-bundle/PlayCraft-by-Rashmina-Fernando/PlayCraft-Setup-v1.0.0.exe)
+New-Item -ItemType Directory -Force -Path "dist-bundle/PlayCraft-by-Rashmina-Fernando" | Out-Null
 Copy-Item -Force "target/release/playcraft.exe" "dist-bundle/PlayCraft-by-Rashmina-Fernando/PlayCraft.exe"
 & "$env:LOCALAPPDATA\Programs\Inno Setup 6\ISCC.exe" "installer/PlayCraft.iss"
 ```
 
-### 2. Compile Android Controller APK (`PlayCraft-Controller.apk`)
+### 2. Compile Android Controller APK
 ```powershell
 cd mobile-app
 $env:JAVA_HOME = "C:\Program Files\Java\jdk-21.0.12"
 $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
-.\gradlew.bat assembleRelease --no-daemon
+.\gradlew.bat testDebugUnitTest assembleRelease --no-daemon
 ```
-> Compiled APK output is written to `mobile-app/app/build/outputs/apk/release/app-release.apk`.
 
 ---
 
@@ -259,7 +310,7 @@ $env:ANDROID_HOME = "$env:LOCALAPPDATA\Android\Sdk"
 ```text
 playcraft/
 ├── Cargo.toml                              # Workspace manifest + LTO/strip release profile
-├── installer/PlayCraft.iss                 # Inno Setup 6 Windows installer script (PC only)
+├── installer/PlayCraft.iss                 # Inno Setup 6 Windows installer (auto-upgrade + bundled ViGEmBus)
 ├── src-tauri/                              # Rust Tauri v2 backend (Win32, ViGEm, Tokio, Scanner)
 │   ├── src/
 │   │   ├── lib.rs                          # Tauri commands, monitors, window modes, save vault, updater, tests
@@ -284,12 +335,13 @@ playcraft/
 │       ├── AppUpdater.kt                   # Daily silent GitHub Releases updater & manual update check
 │       ├── QrScanActivity.kt               # Portrait Camera2 ZXing QR pairing scanner + torch
 │       └── ControllerConfig.kt             # Persistent config, Remember Me endpoints & custom keymap
+├── Screenshots/                            # Windows & Mobile UI showcase screenshots
 └── docs/boot-intro.gif                     # Looping README boot intro preview
 ```
 
 ---
 
-## Author & License
+## Author &amp; License
 
 <div align="center">
 
