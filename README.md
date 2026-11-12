@@ -11,8 +11,8 @@
 
 <p>
   <a href="https://github.com/RashminaFdo/playcraft/releases/latest"><img src="https://img.shields.io/github/v/release/RashminaFdo/playcraft?style=for-the-badge&color=00E5FF&labelColor=0D1321&label=Latest%20Release" alt="Latest Release v1.0.0" /></a>
-  <a href="https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Setup-v1.0.0.exe"><img src="https://img.shields.io/badge/Download-Windows%20Setup%20v1.0.0-00E5FF?style=for-the-badge&logo=windows&logoColor=white&labelColor=0D1321" alt="Download Windows Installer" /></a>
-  <a href="https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Controller.apk"><img src="https://img.shields.io/badge/Download-Android%20APK-10B981?style=for-the-badge&logo=android&logoColor=white&labelColor=0D1321" alt="Download Android Controller APK" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft/releases/latest/download/PlayCraft-Setup-v1.0.0.exe"><img src="https://img.shields.io/badge/Download-Windows%20Setup%20v1.0.0-00E5FF?style=for-the-badge&logo=windows&logoColor=white&labelColor=0D1321" alt="Download Windows Installer" /></a>
+  <a href="https://github.com/RashminaFdo/playcraft/releases/latest/download/PlayCraft-Controller.apk"><img src="https://img.shields.io/badge/Download-Android%20APK-10B981?style=for-the-badge&logo=android&logoColor=white&labelColor=0D1321" alt="Download Android Controller APK" /></a>
   <a href="https://github.com/RashminaFdo/playcraft"><img src="https://img.shields.io/badge/Built%20With-Rust%20%2B%20Tauri%20v2%20%2B%20Kotlin-F59E0B?style=for-the-badge&labelColor=0D1321" alt="Rust Tauri Kotlin" /></a>
   <a href="https://www.rashmina.dev"><img src="https://img.shields.io/badge/Creator-www.rashmina.dev-00E5FF?style=for-the-badge&labelColor=0D1321" alt="Creator Website" /></a>
 </p>
@@ -181,13 +181,14 @@ flowchart LR
 - **Direct-Binary Execution &amp; Launch Flags (`DrmBypassConfig`)**: Auto-resolve `*-Win64-Shipping.exe` directly to skip sub-launchers, toggle `-nosteam`, `-epicportal`, `-novid`, `STEAM_OFFLINE=1` env injection, custom CLI args, `Default` / `Modded` / `Windowed` launch profiles, and Win32 **`HIGH_PRIORITY_CLASS`** priority elevation.
 - **Mod Folder &amp; In-Overlay Notes**: Quick-open mod directories and save build/quest/keybind notes synced live to the In-Game Overlay.
 
-### Display Modes, Multi-Monitor, Tray, Overlay, Specs &amp; Daily Updater
+### Display Modes, Multi-Monitor, Stability, Tray, Overlay &amp; Daily Updater
 - **Primary Monitor Default &amp; Monitor Picker**: Always opens on your **Primary Monitor** by default, with a live monitor selector in Settings.
 - **3 Display Modes (`F11` Cycle)**: Switch seamlessly between **Fullscreen**, **Windowed Fullscreen (Borderless)**, and **Normal Window (Title Bar &amp; Resize)**.
+- **Single-Instance Guard &amp; Non-Blocking Async Backend**: A Windows named mutex (`Local\PlayCraft_By_Rashmina_Fernando_SingleInstance`) restores and focuses any existing window instead of allowing dual-process WebView2, port, or ViGEm conflicts. All heavy library scans, folder disk size checks, local media scans, telemetry polling, and QR generation run asynchronously on Tokio worker threads with immediate first-run `playcraft_library.json` persistence.
 - **Always Stays Alive + Configurable Close `(X)`**: Keeps running open safely during gameplay so your mobile controller never drops; choose whether Close `(X)` exits cleanly (unregistering ViGEm &amp; restoring apps) or minimizes to the Windows System Tray, plus **Launch on Windows Startup**.
 - **Global In-Game Overlay (`Ctrl+Shift+O`, Guide Button, `Back+Start`, or Mobile `PS`/`Xbox` Home)**: Displays live CPU load, RAM usage, active game/PID, connected controller count, your per-game Notes, plus quick buttons (**Purge Standby RAM**, **Open Medal.tv**, **Mobile Controller QR**, **Restore Processes**).
 - **Playtime Analytics, Live PC Specs &amp; Media Hub**: Tracks real session durations (`playcraft_sessions.json`), queries full live Windows Registry/Kernel CPU, multi-GPU VRAM/drivers, motherboard/BIOS, RAM/Swap, and SSD disk bars, plus **1-Click Open Medal.tv**, Windows Audio Mixer shortcut, and local captures gallery.
-- **Daily Silent Auto-Updater + Branded Upgrades**: Checks GitHub Releases once every 24 hours silently when online, shows an in-app **Update Has Arrived** banner + top-bar pill with a **Get Update on GitHub** button, includes **Check for Updates** in Settings, and supports in-place installer upgrades that auto-close any running instance and preserve `%LOCALAPPDATA%\PlayCraft`.
+- **Daily Silent Auto-Updater + Offline Bundled ViGEmBus Setup**: Checks GitHub Releases once every 24 hours silently when online, shows an in-app **Update Has Arrived** banner + top-bar pill with a **Get Update on GitHub** button, includes **Check for Updates** in Settings, and ships an Inno Setup installer (`PlayCraft-Setup-v1.0.0.exe`) with **ViGEmBus v1.22.0 bundled offline**, automatic running-instance shutdown during upgrades, and full `%LOCALAPPDATA%\PlayCraft` preservation.
 
 ---
 
@@ -265,13 +266,14 @@ flowchart LR
 
 ### Download Latest Release (`v1.0.0`)
 
+Only two files are needed from **[GitHub Releases](https://github.com/RashminaFdo/playcraft/releases/latest)** (the ViGEmBus controller driver is already packed inside the Windows setup):
+
 | Platform | Direct Release Download | Notes |
 |---|---|---|
-| **Windows 10 / 11 Installer** | **[PlayCraft-Setup-v1.0.0.exe](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Setup-v1.0.0.exe)** | Bundles **ViGEmBus Driver** offline &amp; launches it automatically on finish if missing; upgrades close any running PlayCraft and preserve `%LOCALAPPDATA%\PlayCraft` |
-| **Android Controller (8.0+)** | **[PlayCraft-Controller.apk](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/PlayCraft-Controller.apk)** | Standalone native Android APK with 6DoF Gyro, PS5/Xbox shells, Force-Feedback &amp; auto-updater |
-| **Standalone Driver (Optional)** | **[ViGEmBus_1.22.0_x64_x86_arm64.exe](https://github.com/RashminaFdo/playcraft/releases/download/v1.0.0/ViGEmBus_1.22.0_x64_x86_arm64.exe)** | Already included inside `PlayCraft-Setup-v1.0.0.exe`; also hosted separately in **[v1.0.0 Releases](https://github.com/RashminaFdo/playcraft/releases/latest)** |
+| **Windows 10 / 11 Installer** | **[PlayCraft-Setup-v1.0.0.exe](https://github.com/RashminaFdo/playcraft/releases/latest/download/PlayCraft-Setup-v1.0.0.exe)** | **ViGEmBus v1.22.0 Driver built in offline** (prompts automatically on the finish screen if not yet installed); upgrades auto-close running PlayCraft and preserve `%LOCALAPPDATA%\PlayCraft` |
+| **Android Controller (8.0+)** | **[PlayCraft-Controller.apk](https://github.com/RashminaFdo/playcraft/releases/latest/download/PlayCraft-Controller.apk)** | Standalone native Android APK with 6DoF Gyro Wheel, PS5/Xbox shells, Force-Feedback &amp; daily auto-updater |
 
-1. Run **`PlayCraft-Setup-v1.0.0.exe`** on Windows (leave the ViGEmBus install checkbox checked if you haven't installed it before).
+1. Run **`PlayCraft-Setup-v1.0.0.exe`** on Windows and leave **"Install ViGEmBus Controller Driver"** checked on the final screen if ViGEmBus is not already installed on your PC (no extra download needed).
 2. Install **`PlayCraft-Controller.apk`** on your Android phone.
 3. Open **PlayCraft** on PC &rarr; click the **Controller icon** (or press **`M`**) &rarr; scan the QR code in the Android app, toggle **Remember Me**, and play.
 
@@ -313,7 +315,7 @@ playcraft/
 ├── installer/PlayCraft.iss                 # Inno Setup 6 Windows installer (auto-upgrade + bundled ViGEmBus)
 ├── src-tauri/                              # Rust Tauri v2 backend (Win32, ViGEm, Tokio, Scanner)
 │   ├── src/
-│   │   ├── lib.rs                          # Tauri commands, monitors, window modes, save vault, updater, tests
+│   │   ├── lib.rs                          # Single-instance mutex, async Tokio commands, monitors, save vault & updater
 │   │   ├── scanner.rs                      # Steam/Epic/GOG/Ubisoft/exe/bat/lnk scanner & online DB lookup
 │   │   ├── optimizer.rs                    # Game Mode, K32EmptyWorkingSet RAM purge & process auto-restore
 │   │   ├── input_bridge.rs                 # ViGEmBus X360 + live XInput rumble stream + Win32 SendInput
