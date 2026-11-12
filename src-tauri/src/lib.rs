@@ -673,8 +673,7 @@ fn setup_usb_mobile_bridge(state: State<'_, AppState>) -> PlayCraftResult<String
     setup_adb_usb_bridge(state.mobile_server.port).map_err(PlayCraftError::ScannerError)
 }
 
-#[tauri::command]
-fn get_full_system_specs() -> PlayCraftResult<FullSystemSpecs> {
+fn collect_full_system_specs_sync() -> PlayCraftResult<FullSystemSpecs> {
     let mut sys = System::new_all();
     sys.refresh_all();
 
@@ -908,31 +907,48 @@ fn read_primary_display_resolution() -> String {
 }
 
 #[tauri::command]
-fn get_game_library(state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
-    let mut guard = state
-        .games
-        .lock()
-        .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
-    let mut changed = false;
-    for g in guard.iter_mut() {
-        if !g.exe_path.is_empty() && !g.exe_path.starts_with("steam://") {
-            let p = std::path::Path::new(&g.exe_path);
-            if p.exists() {
-                let root = resolve_game_root_folder(p);
-                if root.exists() && root.is_dir() {
-                    let real_sz = calculate_directory_size_gb(&root, Some(p));
-                    if real_sz > g.size_on_disk_gb || (g.size_on_disk_gb - real_sz).abs() > 0.05 {
-                        g.size_on_disk_gb = real_sz;
-                        changed = true;
+async fn get_full_system_specs() -> PlayCraftResult<FullSystemSpecs> {
+    tokio::task::spawn_blocking(collect_full_system_specs_sync)
+        .await
+        .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
+}
+
+#[tauri::command]
+async fn get_game_library(state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
+    let games_arc = state.games.clone();
+    let storage_path = state.storage_path.clone();
+
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<Vec<GameEntry>> {
+        let mut guard = games_arc
+            .lock()
+            .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
+        let mut changed = false;
+        for g in guard.iter_mut() {
+            if !g.exe_path.is_empty() && !g.exe_path.starts_with("steam://") {
+                let p = std::path::Path::new(&g.exe_path);
+                if p.exists() {
+                    let root = resolve_game_root_folder(p);
+                    if root.exists() && root.is_dir() {
+                        let real_sz = calculate_directory_size_gb(&root, Some(p));
+                        if real_sz > g.size_on_disk_gb || (g.size_on_disk_gb - real_sz).abs() > 0.05 {
+                            g.size_on_disk_gb = real_sz;
+                            changed = true;
+                        }
                     }
                 }
             }
         }
-    }
-    if changed {
-        state.persist_library();
-    }
-    Ok(guard.clone())
+        let result = guard.clone();
+        drop(guard);
+        if changed {
+            if let Ok(json) = serde_json::to_string_pretty(&result) {
+                let _ = std::fs::write(&storage_path, json);
+            }
+        }
+        Ok(result)
+    })
+    .await
+    .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
 }
 
 #[tauri::command]
@@ -1140,47 +1156,63 @@ fn remove_game_from_library(
 }
 
 #[tauri::command]
-fn scan_directory(dir_path: String, state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
-    let found = scan_directory_for_games(&dir_path, 4)?;
-    let mut guard = state
-        .games
-        .lock()
-        .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
+async fn scan_directory(dir_path: String, state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
+    let games_arc = state.games.clone();
+    let storage_path = state.storage_path.clone();
 
-    for item in &found {
-        if !guard
-            .iter()
-            .any(|g| g.exe_path.eq_ignore_ascii_case(&item.exe_path))
-        {
-            guard.push(item.clone());
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<Vec<GameEntry>> {
+        let found = scan_directory_for_games(&dir_path, 4)?;
+        let mut guard = games_arc
+            .lock()
+            .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
+
+        for item in &found {
+            if !guard
+                .iter()
+                .any(|g| g.exe_path.eq_ignore_ascii_case(&item.exe_path))
+            {
+                guard.push(item.clone());
+            }
         }
-    }
-    let updated = guard.clone();
-    drop(guard);
-    state.persist_library();
-    Ok(updated)
+        let updated = guard.clone();
+        drop(guard);
+        if let Ok(json) = serde_json::to_string_pretty(&updated) {
+            let _ = std::fs::write(&storage_path, json);
+        }
+        Ok(updated)
+    })
+    .await
+    .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
 }
 
 #[tauri::command]
-fn rescan_steam_library(state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
-    let store_found = scan_all_stores();
-    let mut guard = state
-        .games
-        .lock()
-        .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
+async fn rescan_steam_library(state: State<'_, AppState>) -> PlayCraftResult<Vec<GameEntry>> {
+    let games_arc = state.games.clone();
+    let storage_path = state.storage_path.clone();
 
-    for item in store_found {
-        if !guard
-            .iter()
-            .any(|g| g.id == item.id || g.exe_path.eq_ignore_ascii_case(&item.exe_path))
-        {
-            guard.push(item);
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<Vec<GameEntry>> {
+        let store_found = scan_all_stores();
+        let mut guard = games_arc
+            .lock()
+            .map_err(|_| PlayCraftError::ScannerError("Library mutex poisoned".to_string()))?;
+
+        for item in store_found {
+            if !guard
+                .iter()
+                .any(|g| g.id == item.id || g.exe_path.eq_ignore_ascii_case(&item.exe_path))
+            {
+                guard.push(item);
+            }
         }
-    }
-    let updated = guard.clone();
-    drop(guard);
-    state.persist_library();
-    Ok(updated)
+        let updated = guard.clone();
+        drop(guard);
+        if let Ok(json) = serde_json::to_string_pretty(&updated) {
+            let _ = std::fs::write(&storage_path, json);
+        }
+        Ok(updated)
+    })
+    .await
+    .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
 }
 
 #[tauri::command]
@@ -1270,81 +1302,86 @@ fn open_windows_sound_settings() -> PlayCraftResult<()> {
 }
 
 #[tauri::command]
-fn get_local_media_gallery() -> PlayCraftResult<Vec<LocalMediaItem>> {
-    let mut items = Vec::new();
-    let mut candidate_dirs: Vec<(PathBuf, &str)> = Vec::new();
+async fn get_local_media_gallery() -> PlayCraftResult<Vec<LocalMediaItem>> {
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<Vec<LocalMediaItem>> {
+        let mut items = Vec::new();
+        let mut candidate_dirs: Vec<(PathBuf, &str)> = Vec::new();
 
-    if let Ok(profile) = std::env::var("USERPROFILE") {
-        let p = PathBuf::from(&profile);
-        candidate_dirs.push((p.join("Videos").join("Medal"), "Medal.tv Clips"));
-        candidate_dirs.push((p.join("Videos").join("Captures"), "Windows Game Captures"));
-        candidate_dirs.push((
-            p.join("Pictures").join("Screenshots"),
-            "Windows Screenshots",
-        ));
-        candidate_dirs.push((p.join("Videos"), "User Videos"));
-    }
-    for drive in ["C:\\Medal\\Clips", "D:\\Medal\\Clips", "E:\\Medal\\Clips"] {
-        let p = PathBuf::from(drive);
-        if p.exists() {
-            candidate_dirs.push((p, "Medal.tv Clips"));
+        if let Ok(profile) = std::env::var("USERPROFILE") {
+            let p = PathBuf::from(&profile);
+            candidate_dirs.push((p.join("Videos").join("Medal"), "Medal.tv Clips"));
+            candidate_dirs.push((p.join("Videos").join("Captures"), "Windows Game Captures"));
+            candidate_dirs.push((
+                p.join("Pictures").join("Screenshots"),
+                "Windows Screenshots",
+            ));
+            candidate_dirs.push((p.join("Videos"), "User Videos"));
         }
-    }
-
-    let mut seen = std::collections::HashSet::new();
-    for (dir, label) in candidate_dirs {
-        if !dir.exists() {
-            continue;
-        }
-        for entry in walkdir::WalkDir::new(&dir)
-            .max_depth(3)
-            .into_iter()
-            .flatten()
-            .take(150)
-        {
-            let path = entry.path();
-            if !path.is_file() {
-                continue;
-            }
-            let Some(ext) = path.extension().and_then(|e| e.to_str()) else {
-                continue;
-            };
-            let ext_l = ext.to_lowercase();
-            let media_type = match ext_l.as_str() {
-                "mp4" | "mkv" | "webm" | "mov" => "VIDEO CLIP",
-                "png" | "jpg" | "jpeg" | "webp" => "SCREENSHOT",
-                _ => continue,
-            };
-
-            let full_str = path.to_string_lossy().to_string();
-            if !seen.insert(full_str.to_lowercase()) {
-                continue;
-            }
-
-            let meta = entry.metadata().ok();
-            let size_bytes = meta.as_ref().map(|m| m.len()).unwrap_or(0);
-            let size_mb = ((size_bytes as f64 / (1024.0 * 1024.0)) * 100.0).round() as f32 / 100.0;
-            let name = path
-                .file_name()
-                .map(|n| n.to_string_lossy().to_string())
-                .unwrap_or_else(|| "Capture".to_string());
-
-            items.push(LocalMediaItem {
-                name,
-                file_path: full_str,
-                media_type: media_type.to_string(),
-                source_app: label.to_string(),
-                size_mb,
-                modified_date: label.to_string(),
-            });
-
-            if items.len() >= 36 {
-                break;
+        for drive in ["C:\\Medal\\Clips", "D:\\Medal\\Clips", "E:\\Medal\\Clips"] {
+            let p = PathBuf::from(drive);
+            if p.exists() {
+                candidate_dirs.push((p, "Medal.tv Clips"));
             }
         }
-    }
 
-    Ok(items)
+        let mut seen = std::collections::HashSet::new();
+        for (dir, label) in candidate_dirs {
+            if !dir.exists() {
+                continue;
+            }
+            for entry in walkdir::WalkDir::new(&dir)
+                .max_depth(3)
+                .into_iter()
+                .flatten()
+                .take(150)
+            {
+                let path = entry.path();
+                if !path.is_file() {
+                    continue;
+                }
+                let Some(ext) = path.extension().and_then(|e| e.to_str()) else {
+                    continue;
+                };
+                let ext_l = ext.to_lowercase();
+                let media_type = match ext_l.as_str() {
+                    "mp4" | "mkv" | "webm" | "mov" => "VIDEO CLIP",
+                    "png" | "jpg" | "jpeg" | "webp" => "SCREENSHOT",
+                    _ => continue,
+                };
+
+                let full_str = path.to_string_lossy().to_string();
+                if !seen.insert(full_str.to_lowercase()) {
+                    continue;
+                }
+
+                let meta = entry.metadata().ok();
+                let size_bytes = meta.as_ref().map(|m| m.len()).unwrap_or(0);
+                let size_mb =
+                    ((size_bytes as f64 / (1024.0 * 1024.0)) * 100.0).round() as f32 / 100.0;
+                let name = path
+                    .file_name()
+                    .map(|n| n.to_string_lossy().to_string())
+                    .unwrap_or_else(|| "Capture".to_string());
+
+                items.push(LocalMediaItem {
+                    name,
+                    file_path: full_str,
+                    media_type: media_type.to_string(),
+                    source_app: label.to_string(),
+                    size_mb,
+                    modified_date: label.to_string(),
+                });
+
+                if items.len() >= 36 {
+                    break;
+                }
+            }
+        }
+
+        Ok(items)
+    })
+    .await
+    .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
 }
 
 #[tauri::command]
@@ -1748,18 +1785,22 @@ fn update_game_drm_config(
 }
 
 #[tauri::command]
-fn run_deep_optimizations(state: State<'_, AppState>) -> PlayCraftResult<OptimizerReport> {
+async fn run_deep_optimizations(state: State<'_, AppState>) -> PlayCraftResult<OptimizerReport> {
     let cfg = state
         .optimizer_config
         .lock()
         .map(|c| c.clone())
         .unwrap_or_default();
-    let mut restore_guard = state
-        .restorable_processes
-        .lock()
-        .map_err(|_| PlayCraftError::OptimizerError("Restore mutex poisoned".to_string()))?;
+    let restore_arc = state.restorable_processes.clone();
 
-    run_deep_optimization(&cfg, &mut restore_guard)
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<OptimizerReport> {
+        let mut restore_guard = restore_arc
+            .lock()
+            .map_err(|_| PlayCraftError::OptimizerError("Restore mutex poisoned".to_string()))?;
+        run_deep_optimization(&cfg, &mut restore_guard)
+    })
+    .await
+    .map_err(|e| PlayCraftError::OptimizerError(e.to_string()))?
 }
 
 #[tauri::command]
@@ -2063,8 +2104,11 @@ fn launch_game_internal(
 }
 
 #[tauri::command]
-fn get_mobile_pairing_info(state: State<'_, AppState>) -> PlayCraftResult<MobilePairingInfo> {
-    Ok(state.mobile_server.build_pairing_info())
+async fn get_mobile_pairing_info(state: State<'_, AppState>) -> PlayCraftResult<MobilePairingInfo> {
+    let mobile_arc = state.mobile_server.clone();
+    tokio::task::spawn_blocking(move || mobile_arc.build_pairing_info())
+        .await
+        .map_err(|e| PlayCraftError::ScannerError(e.to_string()))
 }
 
 #[tauri::command]
@@ -2103,24 +2147,14 @@ fn simulate_mobile_input(
 }
 
 #[tauri::command]
-fn get_system_telemetry(state: State<'_, AppState>) -> PlayCraftResult<SystemTelemetry> {
-    let mut sys = System::new();
-    sys.refresh_cpu();
-    sys.refresh_memory();
-
-    let cpu_usage = sys.global_cpu_info().cpu_usage();
-    let ram_used_mb = sys.used_memory() / (1024 * 1024);
-    let ram_total_mb = (sys.total_memory() / (1024 * 1024)).max(1);
-    let ram_usage_percent = ((ram_used_mb as f32 / ram_total_mb as f32) * 1000.0).round() / 10.0;
-
-    let (active_game_title, active_game_pid) = state
+async fn get_system_telemetry(state: State<'_, AppState>) -> PlayCraftResult<SystemTelemetry> {
+    let active_game_pair = state
         .active_game
         .lock()
         .ok()
         .and_then(|g| g.clone())
         .map(|(t, p)| (Some(t), Some(p)))
         .unwrap_or((None, None));
-
     let overlay_active = state.overlay_active.lock().map(|b| *b).unwrap_or(false);
     let mobile_clients_connected = state
         .mobile_server
@@ -2129,18 +2163,32 @@ fn get_system_telemetry(state: State<'_, AppState>) -> PlayCraftResult<SystemTel
         .map(|c| c.len())
         .unwrap_or(0);
 
-    Ok(SystemTelemetry {
-        cpu_usage_percent: (cpu_usage * 10.0).round() / 10.0,
-        ram_used_mb,
-        ram_total_mb,
-        ram_usage_percent,
-        active_game_title,
-        active_game_pid,
-        overlay_active,
-        xinput_controllers_connected: get_connected_xinput_count(),
-        vigem_bus_detected: is_vigem_bus_available(),
-        mobile_clients_connected,
+    tokio::task::spawn_blocking(move || -> PlayCraftResult<SystemTelemetry> {
+        let mut sys = System::new();
+        sys.refresh_cpu();
+        sys.refresh_memory();
+
+        let cpu_usage = sys.global_cpu_info().cpu_usage();
+        let ram_used_mb = sys.used_memory() / (1024 * 1024);
+        let ram_total_mb = (sys.total_memory() / (1024 * 1024)).max(1);
+        let ram_usage_percent =
+            ((ram_used_mb as f32 / ram_total_mb as f32) * 1000.0).round() / 10.0;
+
+        Ok(SystemTelemetry {
+            cpu_usage_percent: (cpu_usage * 10.0).round() / 10.0,
+            ram_used_mb,
+            ram_total_mb,
+            ram_usage_percent,
+            active_game_title: active_game_pair.0,
+            active_game_pid: active_game_pair.1,
+            overlay_active,
+            xinput_controllers_connected: get_connected_xinput_count(),
+            vigem_bus_detected: is_vigem_bus_available(),
+            mobile_clients_connected,
+        })
     })
+    .await
+    .map_err(|e| PlayCraftError::ScannerError(e.to_string()))?
 }
 
 #[tauri::command]
@@ -2259,7 +2307,58 @@ fn setup_system_tray(app: &tauri::App) -> anyhow::Result<()> {
     Ok(())
 }
 
+#[cfg(target_os = "windows")]
+struct SingleInstanceGuard(windows_sys::Win32::Foundation::HANDLE);
+
+#[cfg(target_os = "windows")]
+impl Drop for SingleInstanceGuard {
+    fn drop(&mut self) {
+        if !self.0.is_null() {
+            unsafe {
+                windows_sys::Win32::Foundation::CloseHandle(self.0);
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn acquire_single_instance_or_focus() -> Option<SingleInstanceGuard> {
+    use windows_sys::Win32::Foundation::{CloseHandle, GetLastError, ERROR_ALREADY_EXISTS};
+    use windows_sys::Win32::System::Threading::CreateMutexW;
+    use windows_sys::Win32::UI::WindowsAndMessaging::{
+        FindWindowW, SetForegroundWindow, ShowWindow, SW_RESTORE,
+    };
+
+    let mutex_name: Vec<u16> = "Local\\PlayCraft_By_Rashmina_Fernando_SingleInstance"
+        .encode_utf16()
+        .chain(std::iter::once(0))
+        .collect();
+    unsafe {
+        let handle = CreateMutexW(std::ptr::null(), 0, mutex_name.as_ptr());
+        if !handle.is_null() && GetLastError() == ERROR_ALREADY_EXISTS {
+            let title_w: Vec<u16> = APP_TITLE
+                .encode_utf16()
+                .chain(std::iter::once(0))
+                .collect();
+            let existing = FindWindowW(std::ptr::null(), title_w.as_ptr());
+            if !existing.is_null() {
+                ShowWindow(existing, SW_RESTORE);
+                SetForegroundWindow(existing);
+            }
+            CloseHandle(handle);
+            return None;
+        }
+        Some(SingleInstanceGuard(handle))
+    }
+}
+
 pub fn run() {
+    #[cfg(target_os = "windows")]
+    let _single_instance_guard = match acquire_single_instance_or_focus() {
+        Some(guard) => guard,
+        None => return,
+    };
+
     // Install panic hook so any unexpected panic is safely written to a log file instead of silent exit
     std::panic::set_hook(Box::new(|panic_info| {
         let msg = format!("=== PlayCraft Panic at {:?} ===\n{}\n", std::time::SystemTime::now(), panic_info);
@@ -2336,7 +2435,11 @@ pub fn run() {
         }
         upgraded
     } else {
-        build_initial_library(&cwd)
+        let scanned = build_initial_library(&cwd);
+        if let Ok(json) = serde_json::to_string_pretty(&scanned) {
+            let _ = std::fs::write(&storage_path, json);
+        }
+        scanned
     };
 
     let lan_ip = detect_lan_ip();
@@ -2496,7 +2599,7 @@ mod tests {
 
     #[test]
     fn test_real_system_specs_collection() {
-        let specs = get_full_system_specs().expect("system specs should succeed");
+        let specs = collect_full_system_specs_sync().expect("system specs should succeed");
         assert!(specs.ram_total_gb > 0.0);
         assert!(specs.logical_threads > 0);
         assert!(!specs.cpu_brand.is_empty());

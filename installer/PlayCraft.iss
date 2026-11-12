@@ -53,7 +53,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; WorkingDi
 
 [Run]
 Filename: "{tmp}\ViGEmBus_1.22.0_x64_x86_arm64.exe"; Description: "Install ViGEmBus Controller Driver (Required for Forza Gyro & Xbox Vibration)"; Check: ViGEmBusMissing; Flags: postinstall shellexec waituntilterminated skipifsilent
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Launch {#MyAppName}"; WorkingDir: "{app}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 procedure CloseRunningPlayCraft();
